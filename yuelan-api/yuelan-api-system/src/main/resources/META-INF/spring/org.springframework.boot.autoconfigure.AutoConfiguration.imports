@@ -1,0 +1,3 @@
+com.yuelan.system.api.factory.RemoteUserFallbackFactory
+com.yuelan.system.api.factory.RemoteLogFallbackFactory
+com.yuelan.system.api.factory.RemoteFileFallbackFactory

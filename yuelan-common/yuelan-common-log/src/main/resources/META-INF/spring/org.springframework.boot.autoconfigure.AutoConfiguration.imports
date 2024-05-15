@@ -1,0 +1,2 @@
+com.yuelan.common.log.service.AsyncLogService
+com.yuelan.common.log.aspect.LogAspect
