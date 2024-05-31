@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuelan.apartment.mapper.ApaRoomInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.yuelan.apartment.domain.ApaRoomInfo" >
+        <result column="id" property="id" />
+        <result column="floor" property="floor" />
+        <result column="apartment_id" property="apartment_id" />
+        <result column="tenants_id" property="tenants_id" />
+        <result column="state" property="state" />
+        <result column="room_type" property="room_type" />
+        <result column="area" property="area" />
+        <result column="rent" property="rent" />
+        <result column="create_time" property="create_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+                id,
+                floor,
+                apartment_id,
+                tenants_id,
+                state,
+                room_type,
+                area,
+                rent,
+                create_time
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.yuelan.apartment.domain.ApaRoomInfo">
+        INSERT INTO apa_room_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != floor and '' != floor">
+                floor,
+            </if>
+            <if test="null != apartment_id ">
+                apartment_id,
+            </if>
+            <if test="null != tenants_id ">
+                tenants_id,
+            </if>
+            <if test="null != state ">
+                state,
+            </if>
+            <if test="null != room_type and '' != room_type">
+                room_type,
+            </if>
+            <if test="null != area and '' != area">
+                area,
+            </if>
+            <if test="null != rent ">
+                rent,
+            </if>
+            <if test="null != create_time ">
+                create_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != floor and '' != floor">
+                #{floor},
+            </if>
+            <if test="null != apartment_id ">
+                #{apartment_id},
+            </if>
+            <if test="null != tenants_id ">
+                #{tenants_id},
+            </if>
+            <if test="null != state ">
+                #{state},
+            </if>
+            <if test="null != room_type and '' != room_type">
+                #{room_type},
+            </if>
+            <if test="null != area and '' != area">
+                #{area},
+            </if>
+            <if test="null != rent ">
+                #{rent},
+            </if>
+            <if test="null != create_time ">
+                #{create_time}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM apa_room_info
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.yuelan.apartment.domain.ApaRoomInfo">
+        UPDATE apa_room_info
+        <set>
+            <if test="null != floor and '' != floor">floor = #{floor},</if>
+            <if test="null != apartment_id ">apartment_id = #{apartment_id},</if>
+            <if test="null != tenants_id ">tenants_id = #{tenants_id},</if>
+            <if test="null != state ">state = #{state},</if>
+            <if test="null != room_type and '' != room_type">room_type = #{room_type},</if>
+            <if test="null != area and '' != area">area = #{area},</if>
+            <if test="null != rent ">rent = #{rent},</if>
+            <if test="null != create_time ">create_time = #{create_time}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM apa_room_info
+        WHERE id = #{id}
+    </select>
+
+<!--    <select id="load" resultMap="BaseResultMap">-->
+<!--        SELECT r.*, t.* FROM apa_room_info r-->
+<!--            JOIN apa_tenant_info t ON r.tenants_id = t.id-->
+<!--    </select>-->
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM apa_room_info
+        LIMIT #{offset}, #{pagesize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM apa_room_info
+    </select>
+
+</mapper>

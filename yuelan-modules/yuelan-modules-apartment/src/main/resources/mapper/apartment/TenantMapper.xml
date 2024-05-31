@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yuelan.apartment.mapper.TenantMapper">
+
+    <resultMap id="BaseResultMap" type="com.yuelan.apartment.domain.TenantInfo" >
+        <result column="id" property="id" />
+        <result column="apartment_id" property="apartment_id" />
+        <result column="room_id" property="room_id"/>
+        <result column="name" property="name" />
+        <result column="phone" property="phone" />
+        <result column="id_number" property="id_number" />
+        <result column="create_time" property="create_time" />
+        <result column="end_time" property="end_time" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,
+                apartment_id,
+                room_id,
+                name,
+                phone,
+                id_number,
+                create_time,
+                end_time
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.yuelan.apartment.domain.TenantInfo">
+        INSERT INTO apa_tenant_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="null != apartment_id ">
+                apartment_id,
+            </if>
+            <if test="null != room_id ">
+                room_id,
+            </if>
+            <if test="null != name and '' != name">
+                name,
+            </if>
+            <if test="null != phone ">
+                phone,
+            </if>
+            <if test="null != id_number and '' != id_number">
+                id_number,
+            </if>
+            <if test="null != create_time ">
+                create_time,
+            </if>
+            <if test="null != end_time ">
+                end_time
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="null != apartment_id ">
+                #{apartment_id},
+            </if>
+            <if test="null != room_id ">
+                #{room_id},
+            </if>
+            <if test="null != name and '' != name">
+                #{name},
+            </if>
+            <if test="null != phone ">
+                #{phone},
+            </if>
+            <if test="null != id_number and '' != id_number">
+                #{id_number},
+            </if>
+            <if test="null != create_time ">
+                #{create_time},
+            </if>
+            <if test="null != end_time ">
+                #{end_time}
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" >
+        DELETE FROM apa_tenant_info
+        WHERE id = #{id}
+    </delete>
+
+    <update id="update" parameterType="com.yuelan.apartment.domain.TenantInfo">
+        UPDATE apa_tenant_info
+        <set>
+            <if test="null != apartment_id ">apartment_id = #{apartment_id},</if>
+            <if test="null != room_id ">room_id = #{room_id}</if>
+            <if test="null != name and '' != name">name = #{name},</if>
+            <if test="null != phone ">phone = #{phone},</if>
+            <if test="null != id_number and '' != id_number">id_number = #{id_number},</if>
+            <if test="null != create_time ">create_time = #{create_time},</if>
+            <if test="null != end_time ">end_time = #{end_time}</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="load" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM apa_tenant_info
+        WHERE id = #{id}
+    </select>
+
+    <select id="pageList" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM apa_tenant_info
+        LIMIT #{offset}, #{pagesize}
+    </select>
+
+    <select id="pageListCount" resultType="java.lang.Integer">
+        SELECT count(1)
+        FROM apa_tenant_info
+    </select>
+
+</mapper>

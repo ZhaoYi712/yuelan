@@ -13,6 +13,7 @@
         <module>yuelan-modules-gen</module>
         <module>yuelan-modules-job</module>
         <module>yuelan-modules-file</module>
+        <module>yuelan-modules-apartment</module>
     </modules>
 
     <artifactId>yuelan-modules</artifactId>
