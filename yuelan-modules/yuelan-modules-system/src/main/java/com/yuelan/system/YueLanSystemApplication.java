@@ -1,22 +1,26 @@
-package com.yuelan.modules.monitor;
+package com.yuelan.system;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import de.codecentric.boot.admin.server.config.EnableAdminServer;
+import com.yuelan.common.security.annotation.EnableCustomConfig;
+import com.yuelan.common.security.annotation.EnableRyFeignClients;
+import com.yuelan.common.swagger.annotation.EnableCustomSwagger2;
 
 /**
- * 监控中心
+ * 系统模块
  * 
  * @author ruoyi
  */
-@EnableAdminServer
+@EnableCustomConfig
+@EnableCustomSwagger2
+@EnableRyFeignClients
 @SpringBootApplication
-public class RuoYiMonitorApplication
+public class YueLanSystemApplication
 {
     public static void main(String[] args)
     {
-        SpringApplication.run(RuoYiMonitorApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  监控中心启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        SpringApplication.run(YueLanSystemApplication.class, args);
+        System.out.println("(♥◠‿◠)ﾉﾞ  系统模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +
                 " | ( ' )  |       \\  _. /  '       \n" +

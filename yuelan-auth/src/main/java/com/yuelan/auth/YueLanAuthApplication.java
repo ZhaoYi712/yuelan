@@ -12,11 +12,11 @@ import com.yuelan.common.security.annotation.EnableRyFeignClients;
  */
 @EnableRyFeignClients
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
-public class RuoYiAuthApplication
+public class YueLanAuthApplication
 {
     public static void main(String[] args)
     {
-        SpringApplication.run(RuoYiAuthApplication.class, args);
+        SpringApplication.run(YueLanAuthApplication.class, args);
         System.out.println("(♥◠‿◠)ﾉﾞ  认证授权中心启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +

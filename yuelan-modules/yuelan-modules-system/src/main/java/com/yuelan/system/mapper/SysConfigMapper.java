@@ -2,6 +2,8 @@ package com.yuelan.system.mapper;
 
 import java.util.List;
 import com.yuelan.system.domain.SysConfig;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 /**
  * 参数配置 数据层

@@ -1,31 +1,21 @@
 package com.yuelan.apartment.service.impl;
 
-import com.alibaba.nacos.api.remote.request.Request;
 import com.yuelan.apartment.domain.ApartmentInfo;
 import com.yuelan.apartment.mapper.ApartmentInfoMapper;
 import com.yuelan.apartment.service.ApartmentInfoService;
 import com.yuelan.common.core.context.SecurityContextHolder;
-import com.yuelan.common.core.domain.R;
 import com.yuelan.common.core.exception.ServiceException;
 import com.yuelan.common.core.utils.DateUtils;
 import com.yuelan.common.core.utils.uuid.IdUtils;
-import com.yuelan.common.core.web.domain.AjaxResult;
-import com.yuelan.common.security.service.TokenService;
-import com.yuelan.system.api.model.LoginUser;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.RequestContent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.AccessType;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static com.yuelan.apartment.common.Constant.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @description:

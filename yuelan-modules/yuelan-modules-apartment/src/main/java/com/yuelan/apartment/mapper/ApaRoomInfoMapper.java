@@ -2,6 +2,7 @@ package com.yuelan.apartment.mapper;
 
 import com.yuelan.apartment.domain.ApaRoomInfo;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface ApaRoomInfoMapper {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    int delete(int id);
+    int delete(Integer id);
 
     /**
      * 更新
@@ -38,14 +39,15 @@ public interface ApaRoomInfoMapper {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    ApaRoomInfo load(int id);
+    ApaRoomInfo load(Integer id);
 
     /**
      * 查询 分页查询
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    List<ApaRoomInfo> pageList(@Param("offset") int offset, @Param("pagesize") int pagesize);
+    List<ApaRoomInfo> pageList(@Param("offset") int offset, @Param("pagesize") int pagesize,
+                               @Param("apartmentId") Integer apartmentId);
 
     /**
      * 查询 分页查询 count
@@ -53,4 +55,13 @@ public interface ApaRoomInfoMapper {
      * @date 2024/05/23
      **/
     int pageListCount(@Param("offset")int offset, @Param("pagesize") int pagesize);
+
+
+    /**
+     * 查询当前房源下所有房租
+     * @Author: ZhaoYi
+     * @date 2024/06/07
+     */
+    List<ApaRoomInfo> roomList(Integer apartmentId);
+
 }

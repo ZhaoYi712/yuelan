@@ -26,7 +26,10 @@ import reactor.core.publisher.Flux;
 @Component
 public class ValidateCodeFilter extends AbstractGatewayFilterFactory<Object>
 {
-    private final static String[] VALIDATE_URL = new String[] { "/auth/login", "/auth/register" };
+    // 需要验证码校验的url
+    private final static String[] VALIDATE_URL = new String[]{
+                "/auth/login", "/auth/register"
+            };
 
     @Autowired
     private ValidateCodeService validateCodeService;

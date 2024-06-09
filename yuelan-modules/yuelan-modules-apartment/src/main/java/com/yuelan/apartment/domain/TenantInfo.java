@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,15 +21,17 @@ public class TenantInfo implements Serializable {
     /**
      * 房客编号
      */
-    @Id
     @ApiModelProperty("房客编号")
     private Long id;
 
+    /**
+     * 房租编号
+     */
     @ApiModelProperty("房租编号")
     private Long room_id;
 
     /**
-     * 房租编号
+     * 房源编号
      */
     @ApiModelProperty("公寓编号")
     private Long apartment_id;

@@ -14,22 +14,22 @@ public interface TenantService {
     /**
      * 新增
      */
-    public Object insert(TenantInfo tenantInfo);
+    public void insert(TenantInfo tenantInfo);
 
     /**
      * 删除
      */
-    public Object delete(int id);
+    public void delete(Integer id);
 
     /**
      * 更新
      */
-    public Object update(TenantInfo tenantInfo);
+    public void update(TenantInfo tenantInfo);
 
     /**
      * 根据主键 id 查询
      */
-    public TenantInfo load(int id);
+    public TenantInfo load(Integer id);
 
     /**
      * 分页查询

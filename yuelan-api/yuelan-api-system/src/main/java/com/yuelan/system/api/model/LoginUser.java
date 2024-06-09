@@ -44,6 +44,7 @@ public class LoginUser implements Serializable
     private String ipaddr;
 
     /**
+     *
      * 权限列表
      */
     private Set<String> permissions;

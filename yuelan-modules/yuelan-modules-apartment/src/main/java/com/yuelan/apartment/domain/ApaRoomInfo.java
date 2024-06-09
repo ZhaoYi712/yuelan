@@ -1,5 +1,6 @@
 package com.yuelan.apartment.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
@@ -19,47 +20,34 @@ public class ApaRoomInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * id
+     */
+    @ApiModelProperty("id")
+    private Long id;
+
+    /**
      * 房间编号
      */
-    @Id
     @ApiModelProperty("房间编号")
-    private Long id;
+    private String room_id;
 
     /**
      * 楼层
      */
     @ApiModelProperty("楼层")
-    private String floor;
+    private Integer floor;
 
     /**
-     * 所属公寓id
+     * 公寓id
      */
-    @ApiModelProperty("所属公寓id")
-    private Long apartment_id;
+    @ApiModelProperty("公寓id")
+    private String apartment_id;
 
     /**
      * 租户id
      */
     @ApiModelProperty("租户id")
-    private Integer tenants_id;
-
-    /**
-     * 房间状态（1已租，0空闲）
-     */
-    @ApiModelProperty("房间状态（1已租，0空闲）")
-    private Integer state;
-
-    /**
-     * 房间类型：mini小型、normal标准、large大型
-     */
-    @ApiModelProperty("房间类型：mini小型、normal标准、large大型")
-    private String room_type;
-
-    /**
-     * 房间面积（平方）
-     */
-    @ApiModelProperty("房间面积（平方）")
-    private String area;
+    private String tenants_id;
 
     /**
      * 租金
@@ -68,10 +56,41 @@ public class ApaRoomInfo implements Serializable {
     private Double rent;
 
     /**
+     * 房间状态（1已租，0空闲，2欠费）
+     */
+    @ApiModelProperty("房间状态（1已租，0空闲，2欠费）")
+    private Integer state;
+
+    /**
+     * 房间类型
+     */
+    @ApiModelProperty("房间类型")
+    private String type;
+
+    /**
+     * 房间面积
+     */
+    @ApiModelProperty("房间面积")
+    private String area;
+
+    /**
      * 创建时间
      */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @ApiModelProperty("创建时间")
     private Date create_time;
+
+    /**
+     * 当前用电量
+     */
+    @ApiModelProperty("当前用电量")
+    private Long power;
+
+    /**
+     * 当前用水量
+     */
+    @ApiModelProperty("当前用水量")
+    private Long water;
 
     public ApaRoomInfo() {
     }
@@ -84,52 +103,36 @@ public class ApaRoomInfo implements Serializable {
         this.id = id;
     }
 
-    public String getFloor() {
+    public String getRoom_id() {
+        return room_id;
+    }
+
+    public void setRoom_id(String room_id) {
+        this.room_id = room_id;
+    }
+
+    public Integer getFloor() {
         return floor;
     }
 
-    public void setFloor(String floor) {
+    public void setFloor(Integer floor) {
         this.floor = floor;
     }
 
-    public Long getApartment_id() {
+    public String getApartment_id() {
         return apartment_id;
     }
 
-    public void setApartment_id(Long apartment_id) {
+    public void setApartment_id(String apartment_id) {
         this.apartment_id = apartment_id;
     }
 
-    public Integer getTenants_id() {
+    public String getTenants_id() {
         return tenants_id;
     }
 
-    public void setTenants_id(Integer tenants_id) {
+    public void setTenants_id(String tenants_id) {
         this.tenants_id = tenants_id;
-    }
-
-    public Integer getState() {
-        return state;
-    }
-
-    public void setState(Integer state) {
-        this.state = state;
-    }
-
-    public String getRoom_type() {
-        return room_type;
-    }
-
-    public void setRoom_type(String room_type) {
-        this.room_type = room_type;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
     }
 
     public Double getRent() {
@@ -140,11 +143,51 @@ public class ApaRoomInfo implements Serializable {
         this.rent = rent;
     }
 
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getArea() {
+        return area;
+    }
+
+    public void setArea(String area) {
+        this.area = area;
+    }
+
     public Date getCreate_time() {
         return create_time;
     }
 
     public void setCreate_time(Date create_time) {
         this.create_time = create_time;
+    }
+
+    public Long getPower() {
+        return power;
+    }
+
+    public void setPower(Long power) {
+        this.power = power;
+    }
+
+    public Long getWater() {
+        return water;
+    }
+
+    public void setWater(Long water) {
+        this.water = water;
     }
 }

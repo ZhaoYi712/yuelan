@@ -3,8 +3,8 @@ package com.yuelan.apartment.service.impl;
 import com.yuelan.apartment.domain.TenantInfo;
 import com.yuelan.apartment.mapper.TenantMapper;
 import com.yuelan.apartment.service.TenantService;
-import com.yuelan.common.core.web.domain.AjaxResult;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
@@ -22,35 +22,29 @@ public class TenantServiceImpl implements TenantService {
     private TenantMapper tenantInfoMapper;
 
 
+    @Transactional
     @Override
-    public Object insert(TenantInfo tenantInfo) {
-
-        // valid
-        if (tenantInfo == null) {
-            return AjaxResult.error("必要参数缺失");
-        }
-
+    public void insert(TenantInfo tenantInfo) {
         tenantInfoMapper.insert(tenantInfo);
-        return AjaxResult.success();
+    }
+
+    @Transactional
+    @Override
+    public void delete(Integer id) {
+        tenantInfoMapper.delete(id);
+
+    }
+
+    @Transactional
+    @Override
+    public void update(TenantInfo tenantInfo) {
+        tenantInfoMapper.update(tenantInfo);
+
     }
 
 
     @Override
-    public Object delete(int id) {
-        int ret = tenantInfoMapper.delete(id);
-        return ret>0?AjaxResult.success():AjaxResult.error();
-    }
-
-
-    @Override
-    public Object update(TenantInfo tenantInfo) {
-        int ret = tenantInfoMapper.update(tenantInfo);
-        return ret>0?AjaxResult.success():AjaxResult.error();
-    }
-
-
-    @Override
-    public TenantInfo load(int id) {
+    public TenantInfo load(Integer id) {
         return tenantInfoMapper.load(id);
     }
 
@@ -61,8 +55,7 @@ public class TenantServiceImpl implements TenantService {
         List<TenantInfo> pageList = tenantInfoMapper.pageList(offset, pagesize);
         int totalCount = tenantInfoMapper.pageListCount(offset, pagesize);
 
-        // result
-        Map<String, Object> result = new HashMap<String, Object>();
+        Map<String, Object> result = new HashMap<>();
         result.put("pageList", pageList);
         result.put("totalCount", totalCount);
 

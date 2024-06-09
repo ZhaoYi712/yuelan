@@ -1,21 +1,23 @@
-package com.yuelan.gateway;
+package com.yuelan.file;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import com.yuelan.common.swagger.annotation.EnableCustomSwagger2;
 
 /**
- * 网关启动程序
+ * 文件服务
  * 
  * @author ruoyi
  */
+@EnableCustomSwagger2
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class })
-public class RuoYiGatewayApplication
+public class YueLanFileApplication
 {
     public static void main(String[] args)
     {
-        SpringApplication.run(RuoYiGatewayApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  若依网关启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
+        SpringApplication.run(YueLanFileApplication.class, args);
+        System.out.println("(♥◠‿◠)ﾉﾞ  文件服务模块启动成功   ლ(´ڡ`ლ)ﾞ  \n" +
                 " .-------.       ____     __        \n" +
                 " |  _ _   \\      \\   \\   /  /    \n" +
                 " | ( ' )  |       \\  _. /  '       \n" +

@@ -2,6 +2,7 @@ package com.yuelan.system.mapper;
 
 import java.util.List;
 import com.yuelan.system.api.domain.SysRole;
+import org.springframework.stereotype.Repository;
 
 /**
  * 角色表 数据层
