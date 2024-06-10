@@ -1,28 +1,14 @@
 package com.yuelan.apartment.service.impl;
 
-import com.mysql.cj.callback.MysqlCallbackHandler;
 import com.yuelan.apartment.domain.ApaRoomInfo;
 import com.yuelan.apartment.domain.vo.FloorVo;
-import com.yuelan.apartment.domain.vo.RoomVo;
 import com.yuelan.apartment.mapper.ApaRoomInfoMapper;
 import com.yuelan.apartment.service.ApaRoomService;
-import com.yuelan.apartment.service.TenantService;
 import com.yuelan.common.core.exception.ServiceException;
 import com.yuelan.common.core.utils.DateUtils;
-import com.yuelan.common.core.utils.StringUtils;
-import com.yuelan.common.core.utils.uuid.IdUtils;
-import com.yuelan.common.core.utils.uuid.UUID;
-import com.yuelan.common.core.web.domain.AjaxResult;
-import io.lettuce.core.output.KeyStreamingChannel;
-import org.mybatis.logging.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
-import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**

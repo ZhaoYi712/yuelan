@@ -64,4 +64,12 @@ public interface ApaRoomInfoMapper {
      */
     List<ApaRoomInfo> roomList(Integer apartmentId);
 
+
+    /**
+     * 查询房租是否已存在
+     * @param room_id
+     * @return
+     */
+    ApaRoomInfo queryRoomId(String room_id);
+
 }

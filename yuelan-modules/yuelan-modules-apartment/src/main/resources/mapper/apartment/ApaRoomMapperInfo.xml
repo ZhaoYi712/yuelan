@@ -155,4 +155,9 @@
         FROM apa_room_info WHERE apartment_id = #{apartmentId}
     </select>
 
+    <select id="queryRoomId" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List" />
+        FROM apa_room_info WHERE room_id = #{room_id}
+    </select>
+
 </mapper>

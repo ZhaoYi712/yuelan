@@ -1,6 +1,7 @@
 package com.yuelan.apartment.controller;
 
 import com.yuelan.apartment.domain.TenantInfo;
+import com.yuelan.apartment.domain.vo.TenantRegisVo;
 import com.yuelan.apartment.service.TenantService;
 import com.yuelan.common.core.web.domain.AjaxResult;
 import com.yuelan.common.log.annotation.Log;
@@ -37,14 +38,14 @@ public class TenantController {
      **/
     @PostMapping("/addTenant")
     @Log(title = "租户信息录入", businessType = BusinessType.INSERT)
-    public AjaxResult addTenant(@RequestBody @Valid TenantInfo tenantInfo){
+    public AjaxResult addTenant(@RequestBody @Valid TenantRegisVo tenantRegisVo){
         try {
-            tenantInfoService.insert(tenantInfo);
-            return AjaxResult.success();
+            String res = tenantInfoService.insert(tenantRegisVo);
+            return AjaxResult.success(res);
         }
         catch (Exception e){
             log.error(e.getMessage());
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error();
         }
     }
 
@@ -61,6 +62,7 @@ public class TenantController {
             return AjaxResult.success();
         }
         catch (Exception e){
+            log.error(e.getMessage());
             return AjaxResult.error();
         }
     }
@@ -78,6 +80,7 @@ public class TenantController {
             return AjaxResult.success();
         }
         catch (Exception e){
+            log.error(e.getMessage());
             return AjaxResult.error();
         }
     }
@@ -95,17 +98,18 @@ public class TenantController {
             return AjaxResult.success(load);
         }
         catch (Exception e){
+            log.error(e.getMessage());
             return AjaxResult.error();
         }
     }
 
     /**
-     * 查询当前公寓所有租户 分页查询
+     * 查询当前房源所有租户 分页查询
      * @author ZhaoYi
      * @date 2024/05/23
      **/
     @GetMapping("/allTenant")
-    @Log(title = "查询当前公寓所有租户-分页查询", businessType = BusinessType.QUERY)
+    @Log(title = "查询当前房源所有租户-分页查询", businessType = BusinessType.QUERY)
     public AjaxResult pageList(@RequestParam(required = false, defaultValue = "0") int offset,
                                @RequestParam(required = false, defaultValue = "10") int pagesize) {
         try {
@@ -113,6 +117,7 @@ public class TenantController {
             return AjaxResult.success(pageList);
         }
         catch (Exception e){
+            log.error(e.getMessage());
             return AjaxResult.error();
         }
     }

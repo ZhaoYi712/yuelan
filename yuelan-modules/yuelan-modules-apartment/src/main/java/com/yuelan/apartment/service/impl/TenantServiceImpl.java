@@ -1,8 +1,17 @@
 package com.yuelan.apartment.service.impl;
 
+import com.yuelan.apartment.domain.ApaRoomInfo;
 import com.yuelan.apartment.domain.TenantInfo;
+import com.yuelan.apartment.domain.vo.TenantRegisVo;
+import com.yuelan.apartment.mapper.ApaRoomInfoMapper;
 import com.yuelan.apartment.mapper.TenantMapper;
+import com.yuelan.apartment.service.ApaRoomService;
 import com.yuelan.apartment.service.TenantService;
+import com.yuelan.common.core.exception.ServiceException;
+import com.yuelan.common.core.utils.DateUtils;
+import com.yuelan.common.security.handler.GlobalExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
@@ -21,11 +30,40 @@ public class TenantServiceImpl implements TenantService {
     @Resource
     private TenantMapper tenantInfoMapper;
 
+    @Resource
+    private ApaRoomService apaRoomService;
+
+    @Resource
+    private ApaRoomInfoMapper apaRoomInfoMapper;
+
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
 
     @Transactional
     @Override
     public void insert(TenantInfo tenantInfo) {
         tenantInfoMapper.insert(tenantInfo);
+    }
+
+    @Override
+    public String insert(TenantRegisVo tenantRegisVo) {
+
+        // 房租创建时间
+        tenantRegisVo.getApaRoomInfo().setCreate_time(DateUtils.getNowDate());
+
+        // 查询房间是否已被出租
+        ApaRoomInfo apaRoomInfo = apaRoomInfoMapper.queryRoomId(tenantRegisVo.getApaRoomInfo().getRoom_id());
+        if (apaRoomInfo != null) {
+            return "该房间已被出租";
+        }
+
+        int ok = tenantInfoMapper.insert(tenantRegisVo.getTenantInfo());
+        if (ok != 1) {
+            throw new ServiceException("租户添加异常");
+        }
+        apaRoomService.insert(tenantRegisVo.getApaRoomInfo());
+        return null;
     }
 
     @Transactional

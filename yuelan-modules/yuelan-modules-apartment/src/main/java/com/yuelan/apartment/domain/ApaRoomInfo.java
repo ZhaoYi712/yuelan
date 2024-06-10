@@ -22,75 +22,64 @@ public class ApaRoomInfo implements Serializable {
     /**
      * id
      */
-    @ApiModelProperty("id")
     private Long id;
 
     /**
      * 房间编号
      */
-    @ApiModelProperty("房间编号")
     private String room_id;
 
     /**
      * 楼层
      */
-    @ApiModelProperty("楼层")
     private Integer floor;
 
     /**
      * 公寓id
      */
-    @ApiModelProperty("公寓id")
     private String apartment_id;
 
     /**
      * 租户id
      */
-    @ApiModelProperty("租户id")
     private String tenants_id;
 
     /**
      * 租金
      */
-    @ApiModelProperty("租金")
     private Double rent;
 
     /**
-     * 房间状态（1已租，0空闲，2欠费）
+     * 房间状态（1已租，0空闲）
      */
-    @ApiModelProperty("房间状态（1已租，0空闲，2欠费）")
     private Integer state;
 
     /**
      * 房间类型
      */
-    @ApiModelProperty("房间类型")
     private String type;
 
     /**
      * 房间面积
      */
-    @ApiModelProperty("房间面积")
     private String area;
 
     /**
      * 创建时间
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
-    @ApiModelProperty("创建时间")
     private Date create_time;
 
     /**
      * 当前用电量
      */
-    @ApiModelProperty("当前用电量")
     private Long power;
 
     /**
      * 当前用水量
      */
-    @ApiModelProperty("当前用水量")
     private Long water;
+
 
     public ApaRoomInfo() {
     }

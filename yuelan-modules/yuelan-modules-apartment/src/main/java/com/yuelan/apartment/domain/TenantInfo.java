@@ -1,5 +1,6 @@
 package com.yuelan.apartment.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
@@ -33,7 +34,7 @@ public class TenantInfo implements Serializable {
     /**
      * 房源编号
      */
-    @ApiModelProperty("公寓编号")
+    @ApiModelProperty("房源编号")
     private Long apartment_id;
 
     /**
@@ -58,12 +59,14 @@ public class TenantInfo implements Serializable {
      * 合同生效时间
      */
     @ApiModelProperty("合同生效时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date create_time;
 
     /**
      * 合同失效时间
      */
     @ApiModelProperty("合同失效时间")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date end_time;
 
     public TenantInfo() {

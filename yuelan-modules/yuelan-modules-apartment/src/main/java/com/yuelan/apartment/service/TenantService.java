@@ -1,6 +1,8 @@
 package com.yuelan.apartment.service;
 
+import com.yuelan.apartment.domain.ApaRoomInfo;
 import com.yuelan.apartment.domain.TenantInfo;
+import com.yuelan.apartment.domain.vo.TenantRegisVo;
 
 import java.util.Map;
 
@@ -12,9 +14,15 @@ import java.util.Map;
 public interface TenantService {
 
     /**
-     * 新增
+     * 新增租户
      */
     public void insert(TenantInfo tenantInfo);
+
+    /**
+     * 新增租户及房间
+     * @param tenantRegisVo
+     */
+    public String insert(TenantRegisVo tenantRegisVo);
 
     /**
      * 删除

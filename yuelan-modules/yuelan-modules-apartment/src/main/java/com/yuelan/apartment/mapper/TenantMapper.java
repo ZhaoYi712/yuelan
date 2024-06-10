@@ -2,6 +2,7 @@ package com.yuelan.apartment.mapper;
 
 import com.yuelan.apartment.domain.TenantInfo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public interface TenantMapper {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    int delete(int id);
+    int delete(Integer id);
 
     /**
      * 更新
@@ -38,7 +39,7 @@ public interface TenantMapper {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    TenantInfo load(int id);
+    TenantInfo load(Integer id);
 
     /**
      * 查询 分页查询
@@ -53,4 +54,7 @@ public interface TenantMapper {
      * @date 2024/05/23
      **/
     int pageListCount(@Param("offset") int offset, @Param("pagesize") int pagesize);
+
+
+
 }

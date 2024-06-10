@@ -46,7 +46,7 @@ public class ApaRoomController {
         }
         catch (Exception e){
             log.error(e.getMessage());
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error();
         }
     }
 
@@ -64,7 +64,7 @@ public class ApaRoomController {
         }
         catch (Exception e){
             log.error(e.getMessage());
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error();
         }
     }
 
@@ -82,7 +82,7 @@ public class ApaRoomController {
         }
         catch (Exception e){
             log.error(e.getMessage());
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error();
         }
     }
 
@@ -100,7 +100,7 @@ public class ApaRoomController {
         }
         catch (Exception e){
             log.error(e.getMessage());
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error();
         }
     }
 
@@ -121,7 +121,7 @@ public class ApaRoomController {
         }
         catch (Exception e){
            log.error(e.getMessage());
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error();
         }
     }
 
@@ -140,7 +140,7 @@ public class ApaRoomController {
         }
         catch (Exception e){
             log.error(e.getMessage());
-            return AjaxResult.error(e.getMessage());
+            return AjaxResult.error();
         }
     }
 }
