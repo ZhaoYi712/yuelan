@@ -52,14 +52,8 @@ public class ApaRoomController {
     @GetMapping("/delete")
     @Log(title = "刪除房间", businessType = BusinessType.DELETE)
     public AjaxResult delete(@NotNull Integer id){
-        try {
             apaRoomInfoService.delete(id);
             return AjaxResult.success();
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-            return AjaxResult.error();
-        }
     }
 
     /**
