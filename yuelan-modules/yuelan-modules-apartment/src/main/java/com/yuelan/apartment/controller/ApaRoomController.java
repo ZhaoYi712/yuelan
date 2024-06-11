@@ -40,14 +40,8 @@ public class ApaRoomController {
     @PostMapping("/add")
     @Log(title = "新增房间", businessType = BusinessType.INSERT)
     public AjaxResult add(@RequestBody @Valid ApaRoomInfo apaRoomInfo){
-        try {
-            apaRoomInfoService.insert(apaRoomInfo);
-            return AjaxResult.success();
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-            return AjaxResult.error();
-        }
+        Object res = apaRoomInfoService.insert(apaRoomInfo);
+        return AjaxResult.success(res);
     }
 
     /**

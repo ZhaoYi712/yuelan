@@ -6,7 +6,11 @@ import com.yuelan.apartment.mapper.ApaRoomInfoMapper;
 import com.yuelan.apartment.service.ApaRoomService;
 import com.yuelan.common.core.exception.ServiceException;
 import com.yuelan.common.core.utils.DateUtils;
+import com.yuelan.common.security.handler.GlobalExceptionHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,23 +23,30 @@ import java.util.stream.Collectors;
 @Service
 public class ApaRoomServiceImpl implements ApaRoomService {
 
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
     @Resource
     private ApaRoomInfoMapper apaRoomInfoMapper;
 
 
+    @Transactional
     @Override
-    public void insert(ApaRoomInfo apaRoomInfo) {
+    public Object insert(ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
-            throw new ServiceException("apaRoomInfo cannot be blank or null");
+            throw new ServiceException("表单不能为空");
+        }
+        ApaRoomInfo load = apaRoomInfoMapper.queryRoomId(apaRoomInfo.getRoom_id());
+        if (load != null){
+            throw new ServiceException(load.getRoom_id()+ "房间已存在");
         }
         apaRoomInfo.setCreate_time(DateUtils.getNowDate());
         try {
             apaRoomInfoMapper.insert(apaRoomInfo);
         }
-        catch (RuntimeException e){
-            e.printStackTrace();
+        catch (Exception e){
+            log.error(e.getMessage());
         }
-
+        return null;
     }
 
 
@@ -48,7 +59,7 @@ public class ApaRoomServiceImpl implements ApaRoomService {
             apaRoomInfoMapper.delete(id);
         }
         catch (RuntimeException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
     }
@@ -63,7 +74,7 @@ public class ApaRoomServiceImpl implements ApaRoomService {
             apaRoomInfoMapper.update(apaRoomInfo);
         }
         catch (RuntimeException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
     }
@@ -78,7 +89,7 @@ public class ApaRoomServiceImpl implements ApaRoomService {
             return apaRoomInfoMapper.load(id);
         }
         catch (RuntimeException e){
-            e.printStackTrace();
+            log.error(e.getMessage());
             throw new ServiceException("ApaRoomInfo插入异常");
         }
     }
@@ -117,6 +128,13 @@ public class ApaRoomServiceImpl implements ApaRoomService {
             FloorVo floorVo = new FloorVo();
             floorVo.setFloor(floor);
             floorVo.setRoomVo(roomsByFloor.get(floor));
+
+            // 对房间号进行排序
+            List<ApaRoomInfo> sortedRoomVo = roomsByFloor.get(floor).stream()
+                    .sorted(Comparator.comparing(ApaRoomInfo::getRoom_id))
+                    .collect(Collectors.toList());
+
+            floorVo.setRoomVo(sortedRoomVo);
             floorVoList.add(floorVo);
         }
         return floorVoList;

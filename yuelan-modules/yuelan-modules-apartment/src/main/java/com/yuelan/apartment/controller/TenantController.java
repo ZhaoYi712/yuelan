@@ -55,7 +55,7 @@ public class TenantController {
      * @date 2024/05/23
      **/
     @DeleteMapping("/delTenant")
-    @Log(title = "租户清除管理", businessType = BusinessType.DELETE)
+    @Log(title = "租户清除", businessType = BusinessType.DELETE)
     public AjaxResult delTenant(@NotNull Integer id){
         try{
             tenantInfoService.delete(id);

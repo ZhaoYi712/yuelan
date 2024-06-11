@@ -355,6 +355,7 @@ export default {
     // 新增房租
     handleAddRoom(option){
       this.roomAddDialogVisible = true;
+      this.addRoomFrom = {};
       if (option === 'confirm'){
         this.addRoomFrom.state = this.roomState;
         addRoomApi(this.addRoomFrom).then(res =>{
@@ -458,9 +459,11 @@ export default {
   .room-list{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
+
   }
   .room-item{
-    margin: 20px;
+    margin: 15px;
   }
 
 
