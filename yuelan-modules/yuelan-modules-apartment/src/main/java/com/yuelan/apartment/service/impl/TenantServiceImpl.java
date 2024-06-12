@@ -3,7 +3,7 @@ package com.yuelan.apartment.service.impl;
 import com.yuelan.apartment.domain.ApaRoomInfo;
 import com.yuelan.apartment.domain.TenantInfo;
 import com.yuelan.apartment.domain.vo.TenantRegisVo;
-import com.yuelan.apartment.mapper.ApaRoomInfoMapper;
+import com.yuelan.apartment.mapper.RoomMapper;
 import com.yuelan.apartment.mapper.TenantMapper;
 import com.yuelan.apartment.service.ApaRoomService;
 import com.yuelan.apartment.service.TenantService;
@@ -34,7 +34,7 @@ public class TenantServiceImpl implements TenantService {
     private ApaRoomService apaRoomService;
 
     @Resource
-    private ApaRoomInfoMapper apaRoomInfoMapper;
+    private RoomMapper roomMapper;
 
 
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
@@ -46,38 +46,34 @@ public class TenantServiceImpl implements TenantService {
         tenantInfoMapper.insert(tenantInfo);
     }
 
+    @Transactional
     @Override
-    public String insert(TenantRegisVo tenantRegisVo) {
+    public void insert(TenantRegisVo tenantRegisVo) {
 
         // 房租创建时间
         tenantRegisVo.getApaRoomInfo().setCreate_time(DateUtils.getNowDate());
 
         // 查询房间是否已被出租
-        ApaRoomInfo apaRoomInfo = apaRoomInfoMapper.queryRoomId(tenantRegisVo.getApaRoomInfo().getRoom_id());
+        ApaRoomInfo apaRoomInfo = roomMapper.queryRoomId(tenantRegisVo.getApaRoomInfo().getRoom_id());
         if (apaRoomInfo != null) {
-            return "该房间已被出租";
+           throw new ServiceException(apaRoomInfo.getRoom_id()+ "该房间已被出租");
         }
-
-        int ok = tenantInfoMapper.insert(tenantRegisVo.getTenantInfo());
-        if (ok != 1) {
-            throw new ServiceException("租户添加异常");
-        }
-        apaRoomService.insert(tenantRegisVo.getApaRoomInfo());
-        return null;
+        // 添加租户
+        tenantInfoMapper.insert(tenantRegisVo.getTenantInfo());
+        // 添加房间
+        apaRoomService.addRoom(tenantRegisVo.getApaRoomInfo());
     }
 
     @Transactional
     @Override
     public void delete(Integer id) {
         tenantInfoMapper.delete(id);
-
     }
 
     @Transactional
     @Override
     public void update(TenantInfo tenantInfo) {
         tenantInfoMapper.update(tenantInfo);
-
     }
 
 

@@ -18,7 +18,7 @@ public class ApartmentInfo implements Serializable {
     /**
      * 公寓编号
      */
-    private String id;
+    private Long id;
 
     /**
      * 公寓名称
@@ -55,11 +55,11 @@ public class ApartmentInfo implements Serializable {
     public ApartmentInfo() {
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

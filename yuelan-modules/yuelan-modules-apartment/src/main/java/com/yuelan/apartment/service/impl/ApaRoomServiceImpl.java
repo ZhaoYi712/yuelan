@@ -2,17 +2,15 @@ package com.yuelan.apartment.service.impl;
 
 import com.yuelan.apartment.domain.ApaRoomInfo;
 import com.yuelan.apartment.domain.vo.FloorVo;
-import com.yuelan.apartment.mapper.ApaRoomInfoMapper;
+import com.yuelan.apartment.mapper.RoomMapper;
 import com.yuelan.apartment.service.ApaRoomService;
 import com.yuelan.common.core.exception.ServiceException;
 import com.yuelan.common.core.utils.DateUtils;
-import com.yuelan.common.core.web.domain.AjaxResult;
 import com.yuelan.common.security.handler.GlobalExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -29,27 +27,21 @@ public class ApaRoomServiceImpl implements ApaRoomService {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @Resource
-    private ApaRoomInfoMapper apaRoomInfoMapper;
+    private RoomMapper roomMapper;
 
 
     @Transactional
     @Override
-    public void insert(@RequestBody ApaRoomInfo apaRoomInfo) {
+    public void addRoom(ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
             throw new ServiceException("from cannot be blank or null");
         }
-        ApaRoomInfo load = apaRoomInfoMapper.queryRoomId(apaRoomInfo.getRoom_id());
+        ApaRoomInfo load = roomMapper.queryRoomId(apaRoomInfo.getRoom_id());
         if (load != null) {
             throw new ServiceException(load.getRoom_id()+ "房间已存在");
         }
-        try {
-            apaRoomInfo.setCreate_time(DateUtils.getNowDate());
-            apaRoomInfoMapper.insert(apaRoomInfo);
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-            throw new ServiceException("新增房间异常");
-        }
+        apaRoomInfo.setCreate_time(DateUtils.getNowDate());
+        roomMapper.insert(apaRoomInfo);
     }
 
     @Transactional
@@ -58,28 +50,16 @@ public class ApaRoomServiceImpl implements ApaRoomService {
         if (id == null){
             throw new ServiceException("id cannot be blank or null");
         }
-        try {
-            apaRoomInfoMapper.delete(id);
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-            throw new ServiceException("删除操作异常");
-        }
+        roomMapper.delete(id);
     }
 
 
     @Override
-    public void update(@RequestBody ApaRoomInfo apaRoomInfo) {
+    public void update(ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
             throw new ServiceException("apaRoomInfo cannot be blank or null");
         }
-        try {
-            apaRoomInfoMapper.update(apaRoomInfo);
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-        }
-
+        roomMapper.update(apaRoomInfo);
     }
 
 
@@ -88,21 +68,15 @@ public class ApaRoomServiceImpl implements ApaRoomService {
         if (id == null) {
             throw new ServiceException("id cannot be blank or null");
         }
-        try {
-            return apaRoomInfoMapper.load(id);
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-            throw new ServiceException("查询异常");
-        }
+        return roomMapper.load(id);
     }
 
 
     @Override
     public Map<String,Object> pageList(int offset, int pagesize, Integer apartmentId) {
 
-        List<ApaRoomInfo> pageList = apaRoomInfoMapper.pageList(offset, pagesize, apartmentId);
-        int totalCount = apaRoomInfoMapper.pageListCount(offset, pagesize);
+        List<ApaRoomInfo> pageList = roomMapper.pageList(offset, pagesize, apartmentId);
+        int totalCount = roomMapper.pageListCount(offset, pagesize);
 
         Map<String, Object> result = new HashMap<>();
         result.put("pageList", pageList);
@@ -115,7 +89,7 @@ public class ApaRoomServiceImpl implements ApaRoomService {
     @Override
     public List<FloorVo> roomList(Integer apartmentId) {
 
-        List<ApaRoomInfo> apaRoomInfoList = apaRoomInfoMapper.roomList(apartmentId);
+        List<ApaRoomInfo> apaRoomInfoList = roomMapper.roomList(apartmentId);
 
         // 使用Map来按楼层值分组房间
         Map<Integer, List<ApaRoomInfo>> roomsByFloor =

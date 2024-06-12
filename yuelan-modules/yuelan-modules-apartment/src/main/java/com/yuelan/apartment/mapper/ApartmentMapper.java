@@ -10,7 +10,7 @@ import java.util.List;
  * @Author: ZhaoYi
  * @date: 24-5-18 11:01
  */
-public interface ApartmentInfoMapper {
+public interface ApartmentMapper {
 
     /**
      * 新增

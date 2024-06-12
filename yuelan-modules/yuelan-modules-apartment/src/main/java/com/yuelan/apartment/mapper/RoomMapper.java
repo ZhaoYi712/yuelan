@@ -2,7 +2,6 @@ package com.yuelan.apartment.mapper;
 
 import com.yuelan.apartment.domain.ApaRoomInfo;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -11,7 +10,7 @@ import java.util.List;
  * @Author: ZhaoYi
  * @date: 24-5-23 9:13
  */
-public interface ApaRoomInfoMapper {
+public interface RoomMapper {
 
     /**
      * 新增

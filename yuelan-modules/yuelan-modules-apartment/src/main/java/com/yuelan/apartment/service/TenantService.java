@@ -22,7 +22,7 @@ public interface TenantService {
      * 新增租户及房间
      * @param tenantRegisVo
      */
-    public String insert(TenantRegisVo tenantRegisVo);
+    public void insert(TenantRegisVo tenantRegisVo);
 
     /**
      * 删除

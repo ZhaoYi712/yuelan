@@ -39,8 +39,8 @@ public class ApaRoomController {
      **/
     @PostMapping("/add")
     @Log(title = "新增房间", businessType = BusinessType.INSERT)
-    public AjaxResult add(@Validated @RequestBody ApaRoomInfo apaRoomInfo) {
-        apaRoomInfoService.insert(apaRoomInfo);
+    public AjaxResult addRoom(@Validated @RequestBody ApaRoomInfo apaRoomInfo) {
+        apaRoomInfoService.addRoom(apaRoomInfo);
         return AjaxResult.success();
     }
 
@@ -51,7 +51,7 @@ public class ApaRoomController {
      **/
     @GetMapping("/delete")
     @Log(title = "刪除房间", businessType = BusinessType.DELETE)
-    public AjaxResult delete(Integer id) {
+    public AjaxResult deleteRoom(Integer id) {
         apaRoomInfoService.delete(id);
         return AjaxResult.success();
     }
@@ -63,7 +63,7 @@ public class ApaRoomController {
      **/
     @GetMapping("/update")
     @Log(title = "更新房间", businessType = BusinessType.UPDATE)
-    public AjaxResult update(@Validated ApaRoomInfo apaRoomInfo) {
+    public AjaxResult update(@RequestBody @Validated ApaRoomInfo apaRoomInfo) {
         apaRoomInfoService.update(apaRoomInfo);
         return AjaxResult.success();
     }
