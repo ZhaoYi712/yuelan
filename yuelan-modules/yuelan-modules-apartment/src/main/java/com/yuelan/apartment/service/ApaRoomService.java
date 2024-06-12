@@ -16,7 +16,7 @@ public interface ApaRoomService {
     /**
      * 新增
      */
-    public Object insert(ApaRoomInfo apaRoomInfo);
+    public void insert(ApaRoomInfo apaRoomInfo);
 
     /**
      * 删除

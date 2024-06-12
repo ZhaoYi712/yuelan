@@ -105,7 +105,7 @@
 
     <!-- 查看当前房源所有房间 -->
     <el-dialog title="所有房间" :visible.sync="roomDialogVisible">
-      <el-button type="primary" plain @click="handleAddRoom()">新增房间</el-button>
+      <el-button type="primary" plain @click="openAddRoomVisible()">新增房间</el-button>
 
       <div class="room-box" v-for="(roomItem, index) in allRoomList" :key="index">
         <div class="floor">{{roomItem.floor}} 楼</div>
@@ -352,10 +352,12 @@ export default {
       })
     },
 
+    // 打开新增房间交互框
+    openAddRoomVisible(){
+      this.roomAddDialogVisible = true;
+    },
     // 新增房租
     handleAddRoom(option){
-      this.roomAddDialogVisible = true;
-      this.addRoomFrom = {};
       if (option === 'confirm'){
         this.addRoomFrom.state = this.roomState;
         addRoomApi(this.addRoomFrom).then(res =>{

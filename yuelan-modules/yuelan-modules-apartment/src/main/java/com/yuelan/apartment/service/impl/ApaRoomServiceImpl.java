@@ -6,11 +6,14 @@ import com.yuelan.apartment.mapper.ApaRoomInfoMapper;
 import com.yuelan.apartment.service.ApaRoomService;
 import com.yuelan.common.core.exception.ServiceException;
 import com.yuelan.common.core.utils.DateUtils;
+import com.yuelan.common.core.web.domain.AjaxResult;
 import com.yuelan.common.security.handler.GlobalExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,25 +34,25 @@ public class ApaRoomServiceImpl implements ApaRoomService {
 
     @Transactional
     @Override
-    public Object insert(ApaRoomInfo apaRoomInfo) {
+    public void insert(@RequestBody ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
-            throw new ServiceException("表单不能为空");
+            throw new ServiceException("from cannot be blank or null");
         }
         ApaRoomInfo load = apaRoomInfoMapper.queryRoomId(apaRoomInfo.getRoom_id());
-        if (load != null){
+        if (load != null) {
             throw new ServiceException(load.getRoom_id()+ "房间已存在");
         }
-        apaRoomInfo.setCreate_time(DateUtils.getNowDate());
         try {
+            apaRoomInfo.setCreate_time(DateUtils.getNowDate());
             apaRoomInfoMapper.insert(apaRoomInfo);
         }
         catch (Exception e){
             log.error(e.getMessage());
+            throw new ServiceException("新增房间异常");
         }
-        return null;
     }
 
-
+    @Transactional
     @Override
     public void delete(Integer id) {
         if (id == null){
@@ -58,22 +61,22 @@ public class ApaRoomServiceImpl implements ApaRoomService {
         try {
             apaRoomInfoMapper.delete(id);
         }
-        catch (RuntimeException e){
+        catch (Exception e){
             log.error(e.getMessage());
+            throw new ServiceException("删除操作异常");
         }
-
     }
 
 
     @Override
-    public void update(ApaRoomInfo apaRoomInfo) {
+    public void update(@RequestBody ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
             throw new ServiceException("apaRoomInfo cannot be blank or null");
         }
         try {
             apaRoomInfoMapper.update(apaRoomInfo);
         }
-        catch (RuntimeException e){
+        catch (Exception e){
             log.error(e.getMessage());
         }
 
@@ -81,16 +84,16 @@ public class ApaRoomServiceImpl implements ApaRoomService {
 
 
     @Override
-    public ApaRoomInfo load(Integer id) {
+    public ApaRoomInfo load(Integer id){
         if (id == null) {
             throw new ServiceException("id cannot be blank or null");
         }
         try {
             return apaRoomInfoMapper.load(id);
         }
-        catch (RuntimeException e){
+        catch (Exception e){
             log.error(e.getMessage());
-            throw new ServiceException("ApaRoomInfo插入异常");
+            throw new ServiceException("查询异常");
         }
     }
 

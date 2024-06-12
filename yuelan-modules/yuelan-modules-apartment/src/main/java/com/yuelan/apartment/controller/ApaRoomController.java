@@ -9,6 +9,7 @@ import com.yuelan.common.log.enums.BusinessType;
 import com.yuelan.common.security.handler.GlobalExceptionHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -30,7 +31,6 @@ public class ApaRoomController {
     @Resource
     private ApaRoomService apaRoomInfoService;
 
-    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
      * 新增房间
@@ -39,9 +39,9 @@ public class ApaRoomController {
      **/
     @PostMapping("/add")
     @Log(title = "新增房间", businessType = BusinessType.INSERT)
-    public AjaxResult add(@RequestBody @Valid ApaRoomInfo apaRoomInfo){
-        Object res = apaRoomInfoService.insert(apaRoomInfo);
-        return AjaxResult.success(res);
+    public AjaxResult add(@Validated @RequestBody ApaRoomInfo apaRoomInfo) {
+        apaRoomInfoService.insert(apaRoomInfo);
+        return AjaxResult.success();
     }
 
     /**
@@ -51,9 +51,9 @@ public class ApaRoomController {
      **/
     @GetMapping("/delete")
     @Log(title = "刪除房间", businessType = BusinessType.DELETE)
-    public AjaxResult delete(@NotNull Integer id){
-            apaRoomInfoService.delete(id);
-            return AjaxResult.success();
+    public AjaxResult delete(Integer id) {
+        apaRoomInfoService.delete(id);
+        return AjaxResult.success();
     }
 
     /**
@@ -63,15 +63,9 @@ public class ApaRoomController {
      **/
     @GetMapping("/update")
     @Log(title = "更新房间", businessType = BusinessType.UPDATE)
-    public AjaxResult update(@Valid ApaRoomInfo apaRoomInfo){
-        try {
-            apaRoomInfoService.update(apaRoomInfo);
-            return AjaxResult.success();
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-            return AjaxResult.error();
-        }
+    public AjaxResult update(@Validated ApaRoomInfo apaRoomInfo) {
+        apaRoomInfoService.update(apaRoomInfo);
+        return AjaxResult.success();
     }
 
     /**
@@ -81,15 +75,9 @@ public class ApaRoomController {
      **/
     @GetMapping("/load")
     @Log(title = "查询房间信息", businessType = BusinessType.QUERY)
-    public AjaxResult load(@NotNull Integer id){
-        try {
-            ApaRoomInfo load = apaRoomInfoService.load(id);
-            return AjaxResult.success(load);
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-            return AjaxResult.error();
-        }
+    public AjaxResult load(Integer id) {
+        ApaRoomInfo load = apaRoomInfoService.load(id);
+        return AjaxResult.success(load);
     }
 
     /**
@@ -101,18 +89,10 @@ public class ApaRoomController {
     @Log(title = "查询房间-分页查询", businessType = BusinessType.QUERY)
     public AjaxResult pageList(@RequestParam(required = false, defaultValue = "0") int offset,
                                @RequestParam(required = false, defaultValue = "10") int pagesize,
-                               @RequestParam("apartment_id") @NotNull Integer apartmentId) {
-        try {
-            Map<String, Object> pageList = apaRoomInfoService.pageList(offset, pagesize, apartmentId);
-
-            return AjaxResult.success(pageList);
-        }
-        catch (Exception e){
-           log.error(e.getMessage());
-            return AjaxResult.error();
-        }
+                               @RequestParam("apartment_id") Integer apartmentId) {
+        Map<String, Object> pageList = apaRoomInfoService.pageList(offset, pagesize, apartmentId);
+        return AjaxResult.success(pageList);
     }
-
 
     /**
      * 查询当前房源下所有房租
@@ -121,14 +101,8 @@ public class ApaRoomController {
      */
     @RequestMapping("/list")
     @Log(title = "查询当前房源下所有房租", businessType = BusinessType.QUERY)
-    public AjaxResult roomList(@RequestParam("apartment_id") @NotNull Integer apartmentId){
-        try {
-            List<FloorVo> floorVoList = apaRoomInfoService.roomList(apartmentId);
-            return AjaxResult.success(floorVoList);
-        }
-        catch (Exception e){
-            log.error(e.getMessage());
-            return AjaxResult.error();
-        }
+    public AjaxResult roomList(@RequestParam("apartment_id") @NotNull Integer apartmentId) {
+        List<FloorVo> floorVoList = apaRoomInfoService.roomList(apartmentId);
+        return AjaxResult.success(floorVoList);
     }
 }

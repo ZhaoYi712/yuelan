@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.springframework.data.annotation.Id;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,11 +28,13 @@ public class ApaRoomInfo implements Serializable {
     /**
      * 房间编号
      */
+    @NotNull(message = "房间号不能为空")
     private String room_id;
 
     /**
      * 楼层
      */
+    @NotNull(message = "楼层号不能为空")
     private Integer floor;
 
     /**
@@ -47,11 +50,13 @@ public class ApaRoomInfo implements Serializable {
     /**
      * 租金
      */
+    @NotNull(message = "租金不能为空")
     private Double rent;
 
     /**
      * 房间状态（1已租，0空闲）
      */
+    @NotNull(message = "房间状态不能为空")
     private Integer state;
 
     /**
