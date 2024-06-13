@@ -7,6 +7,7 @@ import com.yuelan.apartment.mapper.RoomMapper;
 import com.yuelan.apartment.mapper.TenantMapper;
 import com.yuelan.apartment.service.ApaRoomService;
 import com.yuelan.apartment.service.TenantService;
+import com.yuelan.common.core.context.SecurityContextHolder;
 import com.yuelan.common.core.exception.ServiceException;
 import com.yuelan.common.core.utils.DateUtils;
 import com.yuelan.common.security.handler.GlobalExceptionHandler;
@@ -85,7 +86,7 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public Map<String,Object> pageList(int offset, int pagesize) {
-
+        String username = SecurityContextHolder.getUserName();
         List<TenantInfo> pageList = tenantInfoMapper.pageList(offset, pagesize);
         int totalCount = tenantInfoMapper.pageListCount(offset, pagesize);
 
