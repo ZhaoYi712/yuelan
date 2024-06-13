@@ -104,13 +104,13 @@
     </el-dialog>
 
     <!-- 查看当前房源所有房间 -->
-    <el-dialog title="所有房间" :visible.sync="roomDialogVisible">
+    <el-dialog :title="apartment_name" :visible.sync="roomDialogVisible">
       <el-button type="primary" plain @click="openAddRoomVisible()">新增房间</el-button>
 
       <div class="room-box" v-for="(roomItem, index) in allRoomList" :key="index">
         <div class="floor">{{roomItem.floor}} 楼</div>
         <div class="room-list" >
-          <el-button class="room-item" :type="room.state === 0 ? 'success':'info'" plain @click="roomInfo(room)" v-for="room in roomItem.roomVo" :key="room.id">
+          <el-button class="room-item" :type="room.state === 0 ? 'success':'info' " plain @click="roomInfo(room.id)" v-for="room in roomItem.roomVo" :key="room.id">
             {{room.room_id}}
           </el-button>
         </div>
@@ -165,16 +165,31 @@
     <!-- 房租详细信息交互框 -->
     <el-dialog
       title="房间详细信息"
+      class="room-info"
       :visible.sync="roomInfoDialogVisible"
       width="30%">
-      <el-form :model="infoRoom" label-width="80px">
-        <el-form-item label="房间号">
-          <el-input v-model="infoRoom.room_id" style="width: 200px"></el-input>
-        </el-form-item>
-        <el-form-item label="租户">
-          <el-input v-model="infoRoom.tenants_id" style="width: 200px"></el-input>
-        </el-form-item>
-      </el-form>
+        <el-form label-width="100px">
+          <el-form-item label="房间号">
+            <el-input v-model="infoRoom.room_id" style="width: 200px"></el-input>
+          </el-form-item>
+          <el-form-item label="租户">
+            <el-input v-model="infoRoom.tenants_id === null ? '暂无': infoRoom.tenants_id " style="width: 200px"></el-input>
+          </el-form-item>
+          <el-form-item label="租金">
+            <el-input v-model="infoRoom.rent" style="width: 200px"></el-input>
+          </el-form-item>
+          <el-form-item label="类型">
+            <el-input v-model="infoRoom.type" style="width: 200px"></el-input>
+          </el-form-item>
+          <el-form-item label="用水量">
+            <el-input v-model="infoRoom.water" style="width: 200px"></el-input>
+          </el-form-item>
+          <el-form-item label="用电量">
+            <el-input v-model="infoRoom.power" style="width: 200px"></el-input>
+          </el-form-item>
+        </el-form>
+      <el-button type="danger" @click="delRoom(infoRoom.id)">删 除</el-button>
+      <el-button type="primary" @click="updateRoom(infoRoom)">更 新</el-button>
     </el-dialog>
 
 
@@ -193,12 +208,12 @@
 
 <script>
 import {addHouseApi, deleteHouse, houseList, updateHouseInfo, queryHouse} from "@/api/apartment/house";
-import {addRoomApi, delRoomApi, queryAllRoom} from "@/api/apartment/room";
+import {addRoomApi, delRoomApi, loadRoomApi, queryAllRoom, updateRoomApi} from "@/api/apartment/room";
 
 export default {
   data() {
     return {
-      //房间状态（0已租，1空闲）
+      //房间状态（0已租，1空闲，2欠费）
       roomState: '',
       //加载遮罩
       loading: false,
@@ -226,6 +241,8 @@ export default {
         rent: '',
         state: '',
       },
+      //房源昵称
+      apartment_name: '',
       //房间数据
       allRoomList: [],
       //添加房间弹出框
@@ -238,12 +255,18 @@ export default {
       infoRoom: '',
     }
   },
+  computed:{
+    roomInfoState(){
+      return this.infoRoom.state === 1 ? '已租':'空闲'
+    }
+  },
 
   mounted() {
     this.houseList()
   },
 
   methods: {
+
     // 查询所有房源
     houseList(){
       this.loading = true;
@@ -340,6 +363,8 @@ export default {
 
     // 查询当前所有房租
     handelAllRoom(row){
+      console.log('allroom-row:', row)
+      this.apartment_name = row.apartment_name;
       this.roomDialogVisible = true;
       this.addRoomFrom.apartment_name = row.apartment_name;
       this.addRoomFrom.apartment_id = row.id;
@@ -348,6 +373,7 @@ export default {
       }
       queryAllRoom(params).then(res =>{
         this.allRoomList = res.data;
+        console.log('allRoomList:', res.data)
         this.roomEmptyVisible = res.data.length === 0;
       })
     },
@@ -381,10 +407,21 @@ export default {
     },
 
     // 打开当前房租信息框
-    roomInfo(info){
+    roomInfo(id){
+      this.infoRoom = '';
       this.roomInfoDialogVisible = !this.roomInfoDialogVisible;
-      console.log('roomInfo:', info)
-      this.infoRoom = info
+      loadRoomApi(id).then(res =>{
+        // if (res.data.state === 1) {
+        //   this.roomState = '空闲'
+        // }
+        // if (res.data.state === 0) {
+        //   this.roomState = '已租'
+        // }
+        // if (res.data.state === 2) {
+        //   this.roomState = '欠费'
+        // }
+        this.infoRoom = res.data
+      })
     },
 
     // 删除房租
@@ -399,6 +436,7 @@ export default {
               type: 'success',
               message: res.msg
             });
+            this.roomInfoDialogVisible = false;
           }
           else {
             this.$message({
@@ -412,6 +450,27 @@ export default {
           type: 'info',
           message: '已取消删除'
         });
+      })
+    },
+
+    // 更新房租
+    updateRoom(from){
+      console.log(from)
+      updateRoomApi(from).then(res =>{
+        if (res.code === 200){
+          this.$message({
+            message: res.msg,
+            type: 'success'
+          });
+        }
+        else {
+          this.$message({
+            message: res.msg,
+            type: 'error'
+          });
+        }
+      }).catch(err =>{
+        console.log('API请求发生错误：', err);
       })
     },
 
@@ -467,7 +526,6 @@ export default {
   .room-item{
     margin: 15px;
   }
-
 
 
 </style>

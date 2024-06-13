@@ -29,3 +29,24 @@ export function delRoomApi(id){
     }
   })
 }
+
+
+// 查询房间
+export function loadRoomApi(id){
+  return request({
+    url: 'apartment/room/load',
+    method: "GET",
+    params: {
+      id
+    }
+  })
+}
+
+// 更新房间
+export function updateRoomApi(data){
+  return request({
+    url: 'apartment/room/update',
+    method: "POST",
+    data: data
+  })
+}

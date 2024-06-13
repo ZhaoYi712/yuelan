@@ -79,7 +79,7 @@ public class TenantController {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    @GetMapping("/allTenant")
+    @GetMapping("/tenantList")
     @Log(title = "查询当前房源所有租户-分页查询", businessType = BusinessType.QUERY)
     public AjaxResult pageList(@RequestParam(required = false, defaultValue = "0") int offset,
                                @RequestParam(required = false, defaultValue = "10") int pagesize) {

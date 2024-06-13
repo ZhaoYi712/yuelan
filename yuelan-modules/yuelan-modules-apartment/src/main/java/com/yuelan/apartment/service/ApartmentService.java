@@ -1,7 +1,6 @@
 package com.yuelan.apartment.service;
 
 import com.yuelan.apartment.domain.ApartmentInfo;
-import com.yuelan.common.core.domain.R;
 
 import java.util.Map;
 
@@ -10,7 +9,7 @@ import java.util.Map;
  * @Author: ZhaoYi
  * @date: 24-5-18 11:04
  */
-public interface ApartmentInfoService {
+public interface ApartmentService {
 
     /**
      * 新增

@@ -58,9 +58,9 @@ public class TenantServiceImpl implements TenantService {
         if (apaRoomInfo != null) {
            throw new ServiceException(apaRoomInfo.getRoom_id()+ "该房间已被出租");
         }
-        // 添加租户
+        // 新增租户
         tenantInfoMapper.insert(tenantRegisVo.getTenantInfo());
-        // 添加房间
+        // 新增房间
         apaRoomService.addRoom(tenantRegisVo.getApaRoomInfo());
     }
 

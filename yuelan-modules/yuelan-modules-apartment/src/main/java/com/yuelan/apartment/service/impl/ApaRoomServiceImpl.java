@@ -11,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,7 +52,6 @@ public class ApaRoomServiceImpl implements ApaRoomService {
         roomMapper.delete(id);
     }
 
-
     @Override
     public void update(ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
@@ -62,7 +60,6 @@ public class ApaRoomServiceImpl implements ApaRoomService {
         roomMapper.update(apaRoomInfo);
     }
 
-
     @Override
     public ApaRoomInfo load(Integer id){
         if (id == null) {
@@ -70,7 +67,6 @@ public class ApaRoomServiceImpl implements ApaRoomService {
         }
         return roomMapper.load(id);
     }
-
 
     @Override
     public Map<String,Object> pageList(int offset, int pagesize, Integer apartmentId) {
@@ -84,7 +80,6 @@ public class ApaRoomServiceImpl implements ApaRoomService {
 
         return result;
     }
-
 
     @Override
     public List<FloorVo> roomList(Integer apartmentId) {

@@ -1,18 +1,14 @@
 package com.yuelan.apartment.controller;
 
 import com.yuelan.apartment.domain.ApartmentInfo;
-import com.yuelan.apartment.service.ApartmentInfoService;
+import com.yuelan.apartment.service.ApartmentService;
 import com.yuelan.common.core.web.domain.AjaxResult;
 import com.yuelan.common.log.annotation.Log;
 import com.yuelan.common.log.enums.BusinessType;
-import com.yuelan.common.security.handler.GlobalExceptionHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -25,7 +21,7 @@ import java.util.Map;
 public class ApartmentController {
 
     @Resource
-    private ApartmentInfoService apartmentInfoService;
+    private ApartmentService apartmentService;
 
     /**
      * 房源添加
@@ -35,7 +31,7 @@ public class ApartmentController {
     @PostMapping("/add")
     @Log(title = "房源添加", businessType = BusinessType.INSERT)
     public AjaxResult addApartment(@RequestBody @Validated ApartmentInfo apartmentInfo){
-        apartmentInfoService.add(apartmentInfo);
+        apartmentService.add(apartmentInfo);
         return AjaxResult.success();
     }
 
@@ -47,7 +43,7 @@ public class ApartmentController {
     @GetMapping("/delete")
     @Log(title = "房源删除", businessType = BusinessType.DELETE)
     public Object delApartment(String id){
-        apartmentInfoService.delete(id);
+        apartmentService.delete(id);
         return AjaxResult.success();
     }
 
@@ -59,7 +55,7 @@ public class ApartmentController {
     @PostMapping("/update")
     @Log(title = "房源编辑", businessType = BusinessType.UPDATE)
     public AjaxResult updateApartment(@RequestBody @Validated ApartmentInfo apartmentInfo){
-        apartmentInfoService.update(apartmentInfo);
+        apartmentService.update(apartmentInfo);
         return AjaxResult.success();
     }
 
@@ -71,7 +67,7 @@ public class ApartmentController {
     @GetMapping("/load")
     @Log(title = "房源信息查询", businessType = BusinessType.QUERY)
     public AjaxResult load(String id){
-        ApartmentInfo load = apartmentInfoService.load(id);
+        ApartmentInfo load = apartmentService.load(id);
         return AjaxResult.success(load);
     }
 
@@ -84,7 +80,7 @@ public class ApartmentController {
     @Log(title = "房源信息查询-分页查询", businessType = BusinessType.QUERY)
     public AjaxResult pageList(@RequestParam(required = false, defaultValue = "0") int offset,
                                @RequestParam(required = false, defaultValue = "10") int pagesize) {
-        Map<String, Object> pageList = apartmentInfoService.pageList(offset , pagesize);
+        Map<String, Object> pageList = apartmentService.pageList(offset , pagesize);
         return AjaxResult.success(pageList);
 
     }

@@ -2,11 +2,10 @@ package com.yuelan.apartment.service.impl;
 
 import com.yuelan.apartment.domain.ApartmentInfo;
 import com.yuelan.apartment.mapper.ApartmentMapper;
-import com.yuelan.apartment.service.ApartmentInfoService;
+import com.yuelan.apartment.service.ApartmentService;
 import com.yuelan.common.core.context.SecurityContextHolder;
 import com.yuelan.common.core.exception.ServiceException;
 import com.yuelan.common.core.utils.DateUtils;
-import com.yuelan.common.core.utils.uuid.IdUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -20,7 +19,7 @@ import java.util.Map;
  * @date: 24-5-18 11:05
  */
 @Service
-public class ApartmentInfoServiceImpl implements ApartmentInfoService {
+public class ApartmentServiceImpl implements ApartmentService {
 
     @Resource
     private ApartmentMapper apartmentMapper;

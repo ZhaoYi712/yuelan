@@ -61,9 +61,9 @@ public class ApaRoomController {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    @GetMapping("/update")
+    @PostMapping("/update")
     @Log(title = "更新房间", businessType = BusinessType.UPDATE)
-    public AjaxResult update(@RequestBody @Validated ApaRoomInfo apaRoomInfo) {
+    public AjaxResult updateRoom(@RequestBody @Validated ApaRoomInfo apaRoomInfo) {
         apaRoomInfoService.update(apaRoomInfo);
         return AjaxResult.success();
     }
