@@ -2,15 +2,20 @@ package com.yuelan.apartment.controller;
 
 import com.yuelan.apartment.domain.TenantInfo;
 import com.yuelan.apartment.domain.vo.TenantRegisVo;
+import com.yuelan.apartment.domain.vo.TenantVo;
 import com.yuelan.apartment.service.TenantService;
+import com.yuelan.common.core.web.controller.BaseController;
 import com.yuelan.common.core.web.domain.AjaxResult;
+import com.yuelan.common.core.web.page.TableDataInfo;
 import com.yuelan.common.log.annotation.Log;
 import com.yuelan.common.log.enums.BusinessType;
+import com.yuelan.common.security.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.util.Map;
+import java.util.List;
+
 
 /**
  * @description: 租户管理
@@ -20,7 +25,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/tenant")
-public class TenantController {
+public class TenantController extends BaseController {
 
     @Resource
     private TenantService tenantInfoService;
@@ -31,23 +36,23 @@ public class TenantController {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    @PostMapping("/addTenant")
+    @PostMapping("/add")
+    @RequiresPermissions("apartment:tenant:add")
     @Log(title = "租户信息录入", businessType = BusinessType.INSERT)
     public AjaxResult addTenant(@RequestBody @Valid TenantRegisVo tenantRegisVo){
-        tenantInfoService.insert(tenantRegisVo);
-        return AjaxResult.success();
+        return toAjax(tenantInfoService.insert(tenantRegisVo));
     }
 
     /**
-     * 租户清除管理
+     * 删除租户
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    @DeleteMapping("/delTenant")
+    @DeleteMapping("/delete")
+    @RequiresPermissions("apartment:tenant:delete")
     @Log(title = "租户清除", businessType = BusinessType.DELETE)
-    public AjaxResult delTenant(@NotNull Integer id){
-        tenantInfoService.delete(id);
-        return AjaxResult.success();
+    public AjaxResult remove(@NotNull Long id){
+        return toAjax(tenantInfoService.delete(id));
     }
 
     /**
@@ -55,11 +60,11 @@ public class TenantController {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    @PostMapping("/updateTenant")
+    @PostMapping("/update")
+    @RequiresPermissions("apartment:tenant:update")
     @Log(title = "租户信息更新", businessType = BusinessType.UPDATE)
     public AjaxResult updateTenant(@RequestBody @Valid TenantInfo tenantInfo){
-        tenantInfoService.update(tenantInfo);
-        return AjaxResult.success();
+        return toAjax(tenantInfoService.update(tenantInfo));
     }
 
     /**
@@ -68,23 +73,37 @@ public class TenantController {
      * @date 2024/05/23
      **/
     @GetMapping("/load")
+    @RequiresPermissions("apartment:tenant:load")
     @Log(title = "租户信息查看", businessType = BusinessType.QUERY)
-    public AjaxResult load(@NotNull Integer id){
-        TenantInfo load = tenantInfoService.load(id);
-        return AjaxResult.success(load);
+    public AjaxResult load(@NotNull Long id){
+        return success(tenantInfoService.load(id));
     }
 
+
     /**
-     * 查询当前房源所有租户 分页查询
+     * 查询所有租户 分页查询
      * @author ZhaoYi
-     * @date 2024/05/23
+     * @date 2024/06/15
      **/
-    @GetMapping("/tenantList")
-    @Log(title = "查询当前房源所有租户-分页查询", businessType = BusinessType.QUERY)
-    public AjaxResult pageList(@RequestParam(required = false, defaultValue = "0") int offset,
-                               @RequestParam(required = false, defaultValue = "10") int pagesize) {
-        Map<String, Object> pageList = tenantInfoService.pageList(offset , pagesize);
-        return AjaxResult.success(pageList);
+    @GetMapping("/pageList")
+    @RequiresPermissions("apartment:tenant:list")
+    @Log(title = "查询所有租户-分页查询", businessType = BusinessType.QUERY)
+    public TableDataInfo pageList(TenantInfo tenantInfo){
+        List<TenantVo> list = tenantInfoService.list(tenantInfo);
+        return getDataTable(list);
+    }
+
+
+    /**
+     * 清除房客
+     * @author ZhaoYi
+     * @date 2024/06/15
+     **/
+    @DeleteMapping("/{ids}")
+    @RequiresPermissions("apartment:tenant:remove")
+    @Log(title = "房客信息", businessType = BusinessType.DELETE)
+    public AjaxResult remove(@PathVariable Long[] ids) {
+        return toAjax(tenantInfoService.deleteTenantByIds(ids));
     }
 
 }

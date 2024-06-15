@@ -14,19 +14,13 @@
         <result column="end_time" property="end_time" />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,
-                apartment_id,
-                room_id,
-                name,
-                phone,
-                id_number,
-                create_time,
-                end_time
+    <sql id="Column_List">
+        select id, apartment_id, room_id, name, phone, id_number, create_time ,end_time
+        from apa_tenant_info
     </sql>
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.yuelan.apartment.domain.TenantInfo">
-        INSERT INTO apa_tenant_info
+        insert into apa_tenant_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="null != apartment_id ">
                 apartment_id,
@@ -75,13 +69,8 @@
         </trim>
     </insert>
 
-    <delete id="delete" >
-        DELETE FROM apa_tenant_info
-        WHERE id = #{id}
-    </delete>
-
     <update id="update" parameterType="com.yuelan.apartment.domain.TenantInfo">
-        UPDATE apa_tenant_info
+        update apa_tenant_info
         <set>
             <if test="null != apartment_id ">apartment_id = #{apartment_id},</if>
             <if test="null != room_id ">room_id = #{room_id}</if>
@@ -91,25 +80,35 @@
             <if test="null != create_time ">create_time = #{create_time},</if>
             <if test="null != end_time ">end_time = #{end_time}</if>
         </set>
-        WHERE id = #{id}
+        where id = #{id}
     </update>
 
-
     <select id="load" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM apa_tenant_info
-        WHERE id = #{id}
+        <include refid="Column_List" />
+        where id = #{id}
     </select>
 
-    <select id="pageList" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM apa_tenant_info
-        LIMIT #{offset}, #{pagesize}
+    <select id="tenantInfoList" parameterType="com.yuelan.apartment.domain.TenantInfo" resultMap="BaseResultMap">
+        <include refid="Column_List"/>
+        <where>
+            <if test="apartment_id != null "> and apartment_id = #{apartment_id}</if>
+            <if test="room_id != null "> and room_id = #{room_id}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="id_number != null  and id_number != ''"> and id_number = #{id_number}</if>
+            <if test="end_time != null "> and end_time = #{end_time}</if>
+        </where>
     </select>
 
-    <select id="pageListCount" resultType="java.lang.Integer">
-        SELECT count(1)
-        FROM apa_tenant_info
-    </select>
+    <delete id="delete" >
+        delete from apa_tenant_info where id = #{id}
+    </delete>
+
+    <delete id="deleteTenantByIds" parameterType="String">
+        delete from apa_tenant_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
 
 </mapper>

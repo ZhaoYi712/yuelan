@@ -75,7 +75,7 @@ public class ApaRoomController {
      **/
     @GetMapping("/load")
     @Log(title = "查询房间信息", businessType = BusinessType.QUERY)
-    public AjaxResult load(Integer id) {
+    public AjaxResult load(Long id) {
         ApaRoomInfo load = apaRoomInfoService.load(id);
         return AjaxResult.success(load);
     }

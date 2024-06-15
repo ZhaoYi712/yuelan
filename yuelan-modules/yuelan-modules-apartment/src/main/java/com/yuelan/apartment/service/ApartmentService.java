@@ -19,7 +19,7 @@ public interface ApartmentService {
     /**
      * 删除
      */
-    public void delete(String id);
+    public void delete(Integer id);
 
     /**
      * 更新
@@ -29,7 +29,7 @@ public interface ApartmentService {
     /**
      * 根据主键 id 查询
      */
-    public ApartmentInfo load(String id);
+    public ApartmentInfo load(Long id);
 
     /**
      * 分页查询

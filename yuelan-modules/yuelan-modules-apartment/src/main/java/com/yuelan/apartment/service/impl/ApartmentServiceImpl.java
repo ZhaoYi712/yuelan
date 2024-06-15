@@ -38,7 +38,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
 
     @Override
-    public void delete(String id) {
+    public void delete(Integer id) {
         if (id == null) {
             throw new ServiceException("id cannot is null");
         }
@@ -56,7 +56,7 @@ public class ApartmentServiceImpl implements ApartmentService {
 
 
     @Override
-    public ApartmentInfo load(String id) {
+    public ApartmentInfo load(Long id) {
         if (id == null) {
             throw new ServiceException("id cannot is null");
         }

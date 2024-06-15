@@ -38,7 +38,7 @@ public interface RoomMapper {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    ApaRoomInfo load(Integer id);
+    ApaRoomInfo load(Long id);
 
     /**
      * 查询 分页查询

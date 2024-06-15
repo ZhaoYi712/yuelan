@@ -42,7 +42,7 @@ public class ApartmentController {
      **/
     @GetMapping("/delete")
     @Log(title = "房源删除", businessType = BusinessType.DELETE)
-    public Object delApartment(String id){
+    public Object delApartment(Integer id){
         apartmentService.delete(id);
         return AjaxResult.success();
     }
@@ -66,7 +66,7 @@ public class ApartmentController {
      **/
     @GetMapping("/load")
     @Log(title = "房源信息查询", businessType = BusinessType.QUERY)
-    public AjaxResult load(String id){
+    public AjaxResult load(Long id){
         ApartmentInfo load = apartmentService.load(id);
         return AjaxResult.success(load);
     }

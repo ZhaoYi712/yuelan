@@ -61,7 +61,7 @@ public class ApaRoomServiceImpl implements ApaRoomService {
     }
 
     @Override
-    public ApaRoomInfo load(Integer id){
+    public ApaRoomInfo load(Long id){
         if (id == null) {
             throw new ServiceException("id cannot be blank or null");
         }

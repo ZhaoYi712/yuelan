@@ -2,6 +2,7 @@ package com.yuelan.apartment.mapper;
 
 import com.yuelan.apartment.domain.ApartmentInfo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,7 +11,8 @@ import java.util.List;
  * @Author: ZhaoYi
  * @date: 24-5-18 11:01
  */
-public interface ApartmentMapper {
+@Repository
+public interface ApartmentMapper{
 
     /**
      * 新增
@@ -24,7 +26,7 @@ public interface ApartmentMapper {
      * @author BEJSON
      * @date 2024/05/18
      **/
-    int delete(String id);
+    int delete(Integer id);
 
     /**
      * 更新
@@ -38,7 +40,7 @@ public interface ApartmentMapper {
      * @author BEJSON
      * @date 2024/05/18
      **/
-    ApartmentInfo load(String id);
+    ApartmentInfo load(Long id);
 
     /**
      * 查询 分页查询

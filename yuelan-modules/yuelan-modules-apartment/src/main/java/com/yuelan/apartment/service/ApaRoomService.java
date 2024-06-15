@@ -31,7 +31,7 @@ public interface ApaRoomService {
     /**
      * 根据主键 id 查询
      */
-    public ApaRoomInfo load(Integer id);
+    public ApaRoomInfo load(Long id);
 
     /**
      * 分页查询

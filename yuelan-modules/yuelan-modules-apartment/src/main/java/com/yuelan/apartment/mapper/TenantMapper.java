@@ -2,7 +2,9 @@ package com.yuelan.apartment.mapper;
 
 import com.yuelan.apartment.domain.TenantInfo;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -11,7 +13,8 @@ import java.util.List;
  * @Author: ZhaoYi
  * @date: 24-5-23 16:55
  */
-public interface TenantMapper {
+@Repository
+public interface TenantMapper{
 
     /**
      * 新增
@@ -25,7 +28,15 @@ public interface TenantMapper {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    int delete(Integer id);
+    int delete(Long id);
+
+    /**
+     * 批量删除房客信息
+     * @author ZhaoYi
+     * @date 2024/06/15
+     * @param ids 需要删除的数据主键集合
+     */
+    public int deleteTenantByIds(Long[] ids);
 
     /**
      * 更新
@@ -39,22 +50,13 @@ public interface TenantMapper {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    TenantInfo load(Integer id);
+    TenantInfo load(Long id);
 
     /**
-     * 查询 分页查询
+     * 查询所有租客
      * @author ZhaoYi
-     * @date 2024/05/23
-     **/
-    List<TenantInfo> pageList(@Param("offset") int offset, @Param("pagesize") int pagesize);
-
-    /**
-     * 查询 分页查询 count
-     * @author ZhaoYi
-     * @date 2024/05/23
-     **/
-    int pageListCount(@Param("offset") int offset, @Param("pagesize") int pagesize);
-
-
+     * @date 2024/06/15
+     */
+    List<TenantInfo> tenantInfoList(TenantInfo apaTenantInfo);
 
 }
