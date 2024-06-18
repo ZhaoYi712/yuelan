@@ -2,13 +2,22 @@ package com.yuelan.apartment.controller;
 
 import com.yuelan.apartment.domain.ApartmentInfo;
 import com.yuelan.apartment.service.ApartmentService;
+import com.yuelan.common.core.utils.poi.ExcelUtil;
+import com.yuelan.common.core.web.controller.BaseController;
 import com.yuelan.common.core.web.domain.AjaxResult;
+import com.yuelan.common.core.web.page.TableDataInfo;
 import com.yuelan.common.log.annotation.Log;
 import com.yuelan.common.log.enums.BusinessType;
+import com.yuelan.common.security.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,9 +27,9 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/house")
-public class ApartmentController {
+public class ApartmentController extends BaseController {
 
-    @Resource
+    @Autowired
     private ApartmentService apartmentService;
 
     /**
@@ -28,11 +37,11 @@ public class ApartmentController {
      * @author ZhaoYi
      * @date 2024/05/18
      **/
-    @PostMapping("/add")
+    @PostMapping
+    @RequiresPermissions("apartment:house:add")
     @Log(title = "房源添加", businessType = BusinessType.INSERT)
     public AjaxResult addApartment(@RequestBody @Validated ApartmentInfo apartmentInfo){
-        apartmentService.add(apartmentInfo);
-        return AjaxResult.success();
+        return toAjax(apartmentService.add(apartmentInfo));
     }
 
     /**
@@ -40,11 +49,11 @@ public class ApartmentController {
      * @author ZhaoYi
      * @date 2024/05/18
      **/
-    @GetMapping("/delete")
+    @DeleteMapping("/{ids}")
+    @RequiresPermissions("apartment:house:delete")
     @Log(title = "房源删除", businessType = BusinessType.DELETE)
-    public Object delApartment(Integer id){
-        apartmentService.delete(id);
-        return AjaxResult.success();
+    public AjaxResult remove(@PathVariable @NotNull Long[] ids){
+        return toAjax(apartmentService.deleteIds(ids));
     }
 
     /**
@@ -52,11 +61,11 @@ public class ApartmentController {
      * @author ZhaoYi
      * @date 2024/05/18
      **/
-    @PostMapping("/update")
+    @PutMapping
+    @RequiresPermissions("apartment:house:edit")
     @Log(title = "房源编辑", businessType = BusinessType.UPDATE)
-    public AjaxResult updateApartment(@RequestBody @Validated ApartmentInfo apartmentInfo){
-        apartmentService.update(apartmentInfo);
-        return AjaxResult.success();
+    public AjaxResult edit(@RequestBody @Validated ApartmentInfo apartmentInfo) {
+        return toAjax(apartmentService.update(apartmentInfo));
     }
 
     /**
@@ -64,11 +73,11 @@ public class ApartmentController {
      * @author ZhaoYi
      * @date 2024/05/18
      **/
-    @GetMapping("/load")
+    @GetMapping(value = "/{id}")
+    @RequiresPermissions("apartment:house:query")
     @Log(title = "房源信息查询", businessType = BusinessType.QUERY)
-    public AjaxResult load(Long id){
-        ApartmentInfo load = apartmentService.load(id);
-        return AjaxResult.success(load);
+    public AjaxResult getInfo(@NotNull @PathVariable("id") Long id) {
+        return success(apartmentService.load(id));
     }
 
     /**
@@ -76,13 +85,25 @@ public class ApartmentController {
      * @author ZhaoYi
      * @date 2024/05/18
      **/
-    @GetMapping("/pageList")
+    @GetMapping("/list")
+    @RequiresPermissions("apartment:house:list")
     @Log(title = "房源信息查询-分页查询", businessType = BusinessType.QUERY)
-    public AjaxResult pageList(@RequestParam(required = false, defaultValue = "0") int offset,
-                               @RequestParam(required = false, defaultValue = "10") int pagesize) {
-        Map<String, Object> pageList = apartmentService.pageList(offset , pagesize);
-        return AjaxResult.success(pageList);
+    public TableDataInfo list(ApartmentInfo apartment) {
+        startPage();
+        List<ApartmentInfo> list = apartmentService.pageList(apartment);
+        return getDataTable(list);
+    }
 
+    /**
+     * 导出公寓信息列表
+     */
+    @RequiresPermissions("apartment:house:export")
+    @Log(title = "公寓信息", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, ApartmentInfo apaApartmentInfo) {
+        List<ApartmentInfo> list = apartmentService.pageList(apaApartmentInfo);
+        ExcelUtil<ApartmentInfo> util = new ExcelUtil<>(ApartmentInfo.class);
+        util.exportExcel(response, list, "公寓信息数据");
     }
 
 }

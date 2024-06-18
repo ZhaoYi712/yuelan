@@ -38,9 +38,10 @@ public class ApaRoomInfo implements Serializable {
     private Integer floor;
 
     /**
-     * 公寓id
+     * 房源id
      */
-    private String apartment_id;
+    @NotNull(message = "房源编号不能为空")
+    private Long apartment_id;
 
     /**
      * 租户id
@@ -50,7 +51,6 @@ public class ApaRoomInfo implements Serializable {
     /**
      * 租金
      */
-    @NotNull(message = "租金不能为空")
     private Double rent;
 
     /**
@@ -113,11 +113,11 @@ public class ApaRoomInfo implements Serializable {
         this.floor = floor;
     }
 
-    public String getApartment_id() {
+    public Long getApartment_id() {
         return apartment_id;
     }
 
-    public void setApartment_id(String apartment_id) {
+    public void setApartment_id(Long apartment_id) {
         this.apartment_id = apartment_id;
     }
 

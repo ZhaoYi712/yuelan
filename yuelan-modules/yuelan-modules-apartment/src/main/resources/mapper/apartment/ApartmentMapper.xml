@@ -13,14 +13,15 @@
         <result column="create_time" property="create_time" />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,
+    <sql id="Column_List">
+        select id,
         apartment_name,
         owner,
         address,
         unit,
         state,
         create_time
+        from apa_apartment_info
     </sql>
 
     <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.yuelan.apartment.domain.ApartmentInfo">
@@ -78,6 +79,13 @@
         WHERE id = #{id}
     </delete>
 
+    <delete id="deleteIds" parameterType="Long">
+        delete from apa_apartment_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
     <update id="update" parameterType="com.yuelan.apartment.domain.ApartmentInfo">
         UPDATE apa_apartment_info
         <set>
@@ -92,22 +100,21 @@
         WHERE id = #{id}
     </update>
 
-
     <select id="load" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM apa_apartment_info
+        <include refid="Column_List" />
         WHERE id = #{id}
     </select>
 
-    <select id="pageList" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM apa_apartment_info WHERE owner = #{username}
-        LIMIT #{offset}, #{pagesize}
+    <select id="pageList" resultMap="BaseResultMap" parameterType="com.yuelan.apartment.domain.ApartmentInfo">
+        <include refid="Column_List" />
+        <where>
+            <if test="apartment_name != null  and apartment_name != ''"> and apartment_name like concat('%', #{apartment_name}, '%')</if>
+            <if test="owner != null  and owner != ''"> and owner = #{owner}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="unit != null  and unit != ''"> and unit = #{unit}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+        </where>
     </select>
 
-    <select id="pageListCount" resultType="java.lang.Integer">
-        SELECT count(1)
-        FROM apa_apartment_info
-    </select>
 
 </mapper>

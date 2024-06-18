@@ -23,36 +23,42 @@ public class TenantInfo implements Serializable {
      * 房客编号
      */
     @ApiModelProperty("房客编号")
+    @NotNull(message = "房客编号不能为空")
     private Long id;
 
     /**
-     * 房租编号
+     * 房间编号
      */
-    @ApiModelProperty("房租编号")
-    private Long room_id;
+    @ApiModelProperty("房间编号")
+    @NotNull(message = "房间编号不能为空")
+    private String room_id;
 
     /**
      * 房源编号
      */
     @ApiModelProperty("房源编号")
+    @NotNull(message = "房源编号不能为空")
     private Long apartment_id;
 
     /**
      * 房客姓名
      */
     @ApiModelProperty("房客姓名")
+    @NotNull(message = "房客姓名不能为空")
     private String name;
 
     /**
      * 房客手机号
      */
     @ApiModelProperty("房客手机号")
+    @NotNull(message = "房客手机号不能为空")
     private String phone;
 
     /**
      * 房客身份证号
      */
     @ApiModelProperty("房客身份证号")
+    @NotNull(message = "房客身份证号不能为空")
     private String id_number;
 
     /**
@@ -80,11 +86,11 @@ public class TenantInfo implements Serializable {
         this.id = id;
     }
 
-    public Long getRoom_id() {
+    public String getRoom_id() {
         return room_id;
     }
 
-    public void setRoom_id(Long room_id) {
+    public void setRoom_id(String room_id) {
         this.room_id = room_id;
     }
 

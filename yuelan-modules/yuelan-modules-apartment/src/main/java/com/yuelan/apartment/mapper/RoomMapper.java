@@ -2,6 +2,7 @@ package com.yuelan.apartment.mapper;
 
 import com.yuelan.apartment.domain.ApaRoomInfo;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -10,6 +11,7 @@ import java.util.List;
  * @Author: ZhaoYi
  * @date: 24-5-23 9:13
  */
+@Repository
 public interface RoomMapper {
 
     /**
@@ -24,7 +26,15 @@ public interface RoomMapper {
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    int delete(Integer id);
+    int delete(Long id);
+
+    /**
+     * 批量删除房租信息
+     *
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    int deleteRoomIds(Long[] ids);
 
     /**
      * 更新
@@ -48,20 +58,13 @@ public interface RoomMapper {
     List<ApaRoomInfo> pageList(@Param("offset") int offset, @Param("pagesize") int pagesize,
                                @Param("apartmentId") Integer apartmentId);
 
-    /**
-     * 查询 分页查询 count
-     * @author ZhaoYi
-     * @date 2024/05/23
-     **/
-    int pageListCount(@Param("offset")int offset, @Param("pagesize") int pagesize);
-
 
     /**
      * 查询当前房源下所有房租
      * @Author: ZhaoYi
      * @date 2024/06/07
      */
-    List<ApaRoomInfo> roomList(Integer apartmentId);
+    List<ApaRoomInfo> roomList(@Param("id") Long id);
 
 
     /**
@@ -70,5 +73,14 @@ public interface RoomMapper {
      * @return
      */
     ApaRoomInfo queryRoomId(String room_id);
+
+
+    /**
+     * 查询房租信息列表
+     *
+     * @param apaRoomInfo 房租信息
+     * @return 房租信息集合
+     */
+    List<ApaRoomInfo> selectApaRoomInfoList(ApaRoomInfo apaRoomInfo);
 
 }

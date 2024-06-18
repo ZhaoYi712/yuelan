@@ -49,7 +49,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:info:add']"
+          v-hasPermi="['apartment:tenant:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -60,7 +60,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:info:edit']"
+          v-hasPermi="['apartment:tenant:update']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,7 +71,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:info:remove']"
+          v-hasPermi="['apartment:tenant:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -81,7 +81,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:info:export']"
+          v-hasPermi="['apartment:tenant:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -132,11 +132,11 @@
     <!-- 添加或修改房客信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="公寓编号" prop="apartmentId">
-          <el-input v-model="form.apartmentId" placeholder="请输入公寓编号" />
+        <el-form-item label="公寓编号" prop="apartment_id">
+          <el-input v-model="form.apartment_id" placeholder="请输入公寓编号" />
         </el-form-item>
-        <el-form-item label="房租编号" prop="roomId">
-          <el-input v-model="form.roomId" placeholder="请输入房租编号" />
+        <el-form-item label="房租编号" prop="room_id">
+          <el-input v-model="form.room_id" placeholder="请输入房租编号" />
         </el-form-item>
         <el-form-item label="房客姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入房客姓名" />
@@ -144,12 +144,12 @@
         <el-form-item label="房客手机号" prop="phone">
           <el-input v-model="form.phone" placeholder="请输入房客手机号" />
         </el-form-item>
-        <el-form-item label="房客身份证号" prop="idNumber">
-          <el-input v-model="form.idNumber" placeholder="请输入房客身份证号" />
+        <el-form-item label="房客身份证号" prop="id_number">
+          <el-input v-model="form.id_number" placeholder="请输入房客身份证号" />
         </el-form-item>
-        <el-form-item label="合同失效时间" prop="endTime">
+        <el-form-item label="合同失效时间" prop="end_time">
           <el-date-picker clearable
-            v-model="form.endTime"
+            v-model="form.end_time"
             type="date"
             value-format="yyyy-MM-dd"
             placeholder="请选择合同失效时间">
@@ -204,10 +204,10 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        apartmentId: [
+        apartment_id: [
           { required: true, message: "公寓编号不能为空", trigger: "blur" }
         ],
-        roomId: [
+        room_id: [
           { required: true, message: "房租编号不能为空", trigger: "blur" }
         ],
         name: [
@@ -216,13 +216,13 @@ export default {
         phone: [
           { required: true, message: "房客手机号不能为空", trigger: "blur" }
         ],
-        idNumber: [
+        id_number: [
           { required: true, message: "房客身份证号不能为空", trigger: "blur" }
         ],
-        createTime: [
+        create_time: [
           { required: true, message: "合同生效时间不能为空", trigger: "blur" }
         ],
-        endTime: [
+        end_time: [
           { required: true, message: "合同失效时间不能为空", trigger: "blur" }
         ]
       }
@@ -250,13 +250,13 @@ export default {
     reset() {
       this.form = {
         id: null,
-        apartmentId: null,
-        roomId: null,
+        apartment_id: null,
+        room_id: null,
         name: null,
         phone: null,
-        idNumber: null,
-        createTime: null,
-        endTime: null
+        id_number: null,
+        create_time: null,
+        end_time: null
       };
       this.resetForm("form");
     },
@@ -324,7 +324,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/info/export', {
+      this.download('apartment:tenant:export', {
         ...this.queryParams
       }, `info_${new Date().getTime()}.xlsx`)
     }

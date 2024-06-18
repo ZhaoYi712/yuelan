@@ -15,31 +15,51 @@ public interface ApaRoomService {
 
     /**
      * 新增
+     *
+     * @return
      */
-    public void addRoom(ApaRoomInfo apaRoomInfo);
+    public int addRoom(ApaRoomInfo apaRoomInfo);
 
     /**
      * 删除
+     *
+     * @return
      */
-    public void delete(Integer id);
+    public int delete(Long id);
+
+    /**
+     * 批量删除房租信息
+     *
+     * @param ids 需要删除的房租信息主键集合
+     * @return 结果
+     */
+    public int deleteRoomIds(Long[] ids);
 
     /**
      * 更新
+     *
+     * @return
      */
-    public void update(ApaRoomInfo apaRoomInfo);
+    public int update(ApaRoomInfo apaRoomInfo);
 
     /**
      * 根据主键 id 查询
      */
     public ApaRoomInfo load(Long id);
 
-    /**
-     * 分页查询
-     */
-    public Map<String,Object> pageList(int offset, int pagesize, Integer apartmentId);
 
     /**
      * 查询当前房源下所有房租
      */
-    List<FloorVo> roomList(Integer apartmentId);
+    List<FloorVo> roomList(Long id);
+
+
+    /**
+     * 查询房租信息列表
+     *
+     * @param apaRoomInfo 房租信息
+     * @return 房租信息集合
+     */
+    public List<ApaRoomInfo> selectApaRoomInfoList(ApaRoomInfo apaRoomInfo);
+
 }

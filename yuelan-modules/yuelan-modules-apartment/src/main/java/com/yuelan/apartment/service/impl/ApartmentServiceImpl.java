@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.yuelan.common.core.utils.PageUtils.startPage;
+
 /**
  * @description:
  * @Author: ZhaoYi
@@ -26,32 +28,43 @@ public class ApartmentServiceImpl implements ApartmentService {
 
 
     @Override
-    public void add(ApartmentInfo apartmentInfo){
+    public int add(ApartmentInfo apartmentInfo){
         if (apartmentInfo == null) {
             throw new ServiceException("参数异常");
         }
         apartmentInfo.setOwner(SecurityContextHolder.getUserName());
         apartmentInfo.setState("正常");
         apartmentInfo.setCreate_time(DateUtils.getNowDate());
-        apartmentMapper.insert(apartmentInfo);
+        return apartmentMapper.insert(apartmentInfo);
     }
 
 
     @Override
-    public void delete(Integer id) {
+    public int delete(Long id) {
         if (id == null) {
             throw new ServiceException("id cannot is null");
         }
-        apartmentMapper.delete(id);
+        return apartmentMapper.delete(id);
+    }
+
+    /**
+     * 批量删除公寓信息
+     *
+     * @param ids 需要删除的公寓信息主键
+     * @return 结果
+     */
+    @Override
+    public int deleteIds(Long[] ids) {
+        return apartmentMapper.deleteIds(ids);
     }
 
 
     @Override
-    public void update(ApartmentInfo apartmentInfo) {
+    public int update(ApartmentInfo apartmentInfo) {
         if (apartmentInfo == null) {
             throw new ServiceException("from cannot null");
         }
-        apartmentMapper.update(apartmentInfo);
+        return apartmentMapper.update(apartmentInfo);
     }
 
 
@@ -65,18 +78,11 @@ public class ApartmentServiceImpl implements ApartmentService {
 
 
     @Override
-    public Map<String,Object> pageList(int offset, int pagesize) {
-        // 获取当前用户线程
-        String username = SecurityContextHolder.getUserName();
+    public List<ApartmentInfo> pageList(ApartmentInfo apartmentInfo) {
+        // 当前用户线程
+        apartmentInfo.setOwner(SecurityContextHolder.getUserName());
         // 根据用户名查询房源
-        List<ApartmentInfo> pageList = apartmentMapper.pageList(username, offset, pagesize);
-        int totalCount = apartmentMapper.pageListCount(offset, pagesize);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("pageList", pageList);
-        result.put("totalCount", totalCount);
-
-        return result;
+        return apartmentMapper.pageList(apartmentInfo);
     }
 
 }

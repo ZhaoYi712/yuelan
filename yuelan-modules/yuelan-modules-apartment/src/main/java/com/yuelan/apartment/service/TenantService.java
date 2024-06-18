@@ -17,10 +17,10 @@ public interface TenantService {
     /**
      * 新增租户及房间
      *
-     * @param tenantRegisVo
+     * @param
      * @return
      */
-    public int insert(TenantRegisVo tenantRegisVo);
+    public int insert(TenantVo tenantVo);
 
     /**
      * 删除
@@ -51,7 +51,6 @@ public interface TenantService {
      * 分页查询
      */
     public List<TenantVo> list(TenantInfo tenantInfo);
-
 
 
 }

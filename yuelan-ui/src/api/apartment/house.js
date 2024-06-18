@@ -1,41 +1,47 @@
 import request from '@/utils/request'
 
-
-export function houseList(param){
+// 查询公寓信息列表
+export function listInfo(query){
   return request({
-    url: '/apartment/house/pageList',
+    url: '/apartment/house/list',
     method: 'get',
-    params: param
+    params: query
   })
 }
 
-export function deleteHouse(id){
+// 查询公寓信息详细
+export function getInfo(id){
   return request({
-    url: '/apartment/house/delete'+"?id="+id,
+    url: '/apartment/house/' + id,
     method: 'get'
   })
 }
 
-export function queryHouse(id){
+// 新增公寓信息
+export function addInfo(data){
   return request({
-    url: '/apartment/house/load'+"?id="+id,
-    method: 'get'
+    url: '/apartment/house',
+    method: 'post',
+    data: data
   })
 }
 
-export function updateHouseInfo(from){
+// 删除公寓信息
+export function delInfo(id){
   return request({
-    url: '/apartment/house/update',
-    method: 'post',
-    data: from
+    url: '/apartment/house/'+ id,
+    method: 'delete'
   })
 }
 
-export function addHouseApi(from){
+// 修改公寓信息
+export function updateInfo(data){
   return request({
-    url: '/apartment/house/add',
-    method: 'post',
-    data: from
+    url: '/apartment/house',
+    method: 'put',
+    data: data
   })
 }
+
+
 

@@ -1,109 +1,152 @@
 <template>
 
-  <div class="container">
+  <div class="app-container">
 
-    <div class="function-top-btn">
-      <el-button type="primary" plain size="small" @click="openAddHouseDialog">新增</el-button>
-      <el-button type="primary" plain size="small">导出</el-button>
-      <el-button icon="el-icon-refresh" circle size="small" @click="houseList"></el-button>
-    </div>
+    <!--搜索-->
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form-item label="公寓名称" prop="apartment_name">
+        <el-input
+          v-model="queryParams.apartment_name"
+          placeholder="请输入公寓名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="公寓负责人" prop="owner">
+        <el-input
+          v-model="queryParams.owner"
+          placeholder="请输入公寓负责人"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="公寓地址" prop="address">
+        <el-input
+          v-model="queryParams.address"
+          placeholder="请输入公寓地址"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="公寓状态" prop="state">
+        <el-input
+          v-model="queryParams.state"
+          placeholder="请输入公寓状态"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
+        <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+      </el-form-item>
+    </el-form>
 
-    <el-table
-      :cell-style="{'text-align':'center'}"
-      :header-cell-style="{'text-align':'center'}"
-      :data="pageList"
-      v-loading="loading"
-      style="width: 100%"
-      show-overflow-tooltip="true"
-      :default-sort = "{prop: 'date', order: 'descending'}"
-    >
-      <!-- 展开表格行 -->
-      <el-table-column type="expand">
-        <template slot-scope="props">
-          <el-form label-position="left" inline class="demo-table-expand">
-            <el-form-item label="编号">
-              <span>{{ props.row.id }}</span>
-            </el-form-item>
-            <el-form-item label="地址">
-              <span>{{ props.row.address }}</span>
-            </el-form-item>
-            <el-form-item label="注册日期">
-              <span>{{ props.row.create_time }}</span>
-            </el-form-item>
-          </el-form>
-        </template>
-      </el-table-column>
+    <!--顶部按钮-->
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['apartment:house:add']"
+        >新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['apartment:house:update']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['apartment:house:remove']"
+        >删除</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-download"
+          size="mini"
+          @click="handleExport"
+          v-hasPermi="['apartment:house:export']"
+        >导出</el-button>
+      </el-col>
+      <right-toolbar :showSearch.sync="showSearch" @queryTable="getHouseList"></right-toolbar>
+    </el-row>
 
-      <el-table-column
-        prop="apartment_name"
-        label="公寓名称"
-        sortable
-        width="180">
-        <template slot-scope="scope">
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.apartment_name }}</el-tag>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="address"
-        label="详细地址"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="state"
-        label="状态"
-        width="180">
-      </el-table-column>
-      <el-table-column label="操作">
+    <!--表格数据-->
+    <el-table v-loading="loading" :data="pageList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="公寓编号" align="center" prop="id" />
+      <el-table-column label="公寓名称" align="center" prop="apartment_name" />
+      <el-table-column label="公寓地址" align="center" prop="address" />
+      <el-table-column label="公寓状态" align="center" prop="state" />
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
-            @click="handelAllRoom(scope.row)">查看房间</el-button>
+            type="text"
+            icon="el-icon-view"
+            @click="roomView(scope.row)"
+            v-hasPermi="['apartment:house:list']"
+          >房间</el-button>
           <el-button
             size="mini"
-            @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['apartment:house:update']"
+          >修改</el-button>
           <el-button
-              size="mini"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['apartment:house:remove']"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!-- 编辑房源信息 -->
-    <el-dialog title="更改房源信息" :visible.sync="editDialogVisible">
-      <el-form :model="editFrom">
-        <el-form-item label="房源昵称" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="editFrom.apartment_name" autocomplete="off"></el-input>
+    <!-- 添加或修改房源信息对话框 -->
+    <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+        <el-form-item label="公寓名称" prop="apartment_name">
+          <el-input v-model="form.apartment_name" placeholder="请输入公寓名称" />
         </el-form-item>
-        <el-form-item label="房源地址" :label-width="formLabelWidth" style="width: 500px">
-          <el-input v-model="editFrom.address" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="handUpdate('cancel')">取 消</el-button>
-        <el-button type="primary" @click="handUpdate('confirm')">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <!-- 新增房源信息 -->
-    <el-dialog title="新增房源信息" :visible.sync="addDialogVisible">
-      <el-form :model="addHouseFrom">
-        <el-form-item label="房源昵称" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addHouseFrom.apartment_name" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="房源地址" :label-width="formLabelWidth" style="width: 500px">
-          <el-input v-model="addHouseFrom.address" autocomplete="off"></el-input>
+        <el-form-item label="公寓地址" prop="address">
+          <el-input v-model="form.address" placeholder="请输入公寓地址" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="handleAddHouse('cancel')">取 消</el-button>
-        <el-button type="primary" @click="handleAddHouse('confirm')">确 定</el-button>
+        <el-button type="primary" @click="submitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
 
-    <!-- 查看当前房源所有房间 -->
+    <el-dialog
+      :title="title"
+      :visible.sync="roomCompView"
+      width="30%">
+      <room v-if="roomCompView" :rows="roomDate"></room>
+    </el-dialog>
+
+    <!--查看当前房源所有房间-->
     <el-dialog :title="apartment_name" :visible.sync="roomDialogVisible">
       <el-button type="primary" plain @click="openAddRoomVisible()">新增房间</el-button>
 
@@ -119,7 +162,7 @@
       <el-empty v-if="roomEmptyVisible" description="暂无房租，请先添加"></el-empty>
     </el-dialog>
 
-    <!-- 添加房间 -->
+    <!--添加房间-->
     <el-dialog title="添加房间" :visible.sync="roomAddDialogVisible" >
       <el-form :model="addRoomFrom">
         <el-form-item label="房间号" :required="true" :label-width="formLabelWidth" style="width: 300px">
@@ -162,7 +205,7 @@
       </div>
     </el-dialog>
 
-    <!-- 房租详细信息交互框 -->
+    <!--房租详细信息交互框-->
     <el-dialog
       title="房间详细信息"
       class="room-info"
@@ -192,46 +235,64 @@
       <el-button type="primary" @click="updateRoom(infoRoom)">更 新</el-button>
     </el-dialog>
 
-
     <!--分页器-->
-    <div class="pagination">
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="1000">
-      </el-pagination>
-    </div>
+    <pagination
+      v-show="total>0"
+      :total="total"
+      :page.sync="queryParams.pageNum"
+      :limit.sync="queryParams.pageSize"
+      @pagination="getHouseList"
+    />
 
   </div>
 
 </template>
 
 <script>
-import {addHouseApi, deleteHouse, houseList, updateHouseInfo, queryHouse} from "@/api/apartment/house";
+import {addInfo, delInfo, listInfo, updateInfo, getInfo} from "@/api/apartment/house";
 import {addRoomApi, delRoomApi, loadRoomApi, queryAllRoom, updateRoomApi} from "@/api/apartment/room";
+import room from "@/components/Apartment/Room/index.vue";
 
 export default {
+  name: 'house',
+  components:{room},
   data() {
     return {
-      //房间状态（0已租，1空闲，2欠费）
-      roomState: '',
-      //加载遮罩
+      roomDate: null,
+      roomCompView: false,
+      // 表单参数
+      form: {},
+      // 加载遮罩
       loading: false,
-      //房源数据
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 房源数据
       pageList: [],
-      //空数据组件
+      // 总条数
+      total: 0,
+      // 显示搜索条件
+      showSearch: true,
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      // 空数据组件
       roomEmptyVisible: true,
-      //表单label宽度
+      // 表单label宽度
       formLabelWidth: '100px',
-      //房源编辑models
+      // 房源编辑models
       editFrom:{},
-      //房源编辑弹出框
+      // 房源编辑弹出框
       editDialogVisible: false,
-      //房源添加models
+      // 房源添加models
       addHouseFrom: {},
-      //房源添加弹出框
+      // 房源添加弹出框
       addDialogVisible: false,
-      //添加房间models
+      // 添加房间models
       addRoomFrom: {
         room_id: '',
         floor: '',
@@ -241,142 +302,169 @@ export default {
         rent: '',
         state: '',
       },
-      //房源昵称
+      // 房间状态（0已租，1空闲，2欠费）
+      roomState: '',
+      // 房源昵称
       apartment_name: '',
-      //房间数据
+      // 房间数据
       allRoomList: [],
-      //添加房间弹出框
+      // 添加房间弹出框
       roomAddDialogVisible: false,
-      //所有房间弹出框
+      // 所有房间弹出框
       roomDialogVisible: false,
-      //房间信息弹出框
+      // 房间信息弹出框
       roomInfoDialogVisible: false,
-      //当前房间信息models
+      // 当前房间信息models
       infoRoom: '',
-    }
-  },
-  computed:{
-    roomInfoState(){
-      return this.infoRoom.state === 1 ? '已租':'空闲'
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        apartment_name: null,
+        owner: null,
+        address: null,
+        state: null,
+        create_time: null
+      },
+      // 表单校验
+      rules: {
+        apartment_name: [
+          { required: true, message: "公寓名称不能为空", trigger: "blur" }
+        ],
+        owner: [
+          { required: true, message: "公寓负责人不能为空", trigger: "blur" }
+        ],
+        address: [
+          { required: true, message: "公寓地址不能为空", trigger: "blur" }
+        ],
+        state: [
+          { required: true, message: "公寓状态不能为空", trigger: "blur" }
+        ],
+      }
     }
   },
 
   mounted() {
-    this.houseList()
+    this.getHouseList()
   },
 
   methods: {
 
-    // 查询所有房源
-    houseList(){
+    /** 展示 roomView 组件 */
+    roomView(row) {
+      this.roomDate = row;
+      this.roomCompView = true;
+      this.title = row.apartment_name;
+    },
+
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getHouseList();
+    },
+
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.getHouseList();
+    },
+
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        apartment_name: null,
+        owner: null,
+        address: null,
+        unit: null,
+        state: null,
+        create_time: null
+      };
+      this.resetForm("form");
+    },
+
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.reset();
+    },
+
+    /** 多选框选中数据 */
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length!==1
+      this.multiple = !selection.length
+    },
+
+    /** 新增按钮操作: 新增房源 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加公寓信息";
+    },
+
+    /** 修改按钮操作: 修改房源 */
+    handleUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getInfo(id).then(response => {
+        this.form = response.data;
+        this.open = true;
+        this.title = "修改公寓信息";
+      });
+    },
+
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateInfo(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getHouseList();
+            });
+          } else {
+            addInfo(this.form).then(res => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getHouseList();
+            });
+          }
+        }
+      });
+    },
+
+    /** 删除按钮操作: 删除指定房源 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除公寓信息编号为"' + ids + '"的数据项？').then(function() {
+        return delInfo(ids);
+      }).then(() => {
+        this.getHouseList();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => {
+        this.$modal.msgError("网络异常");
+      });
+    },
+
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('apartment/house/export', {
+        ...this.queryParams
+      }, `info_${new Date().getTime()}.xlsx`)
+    },
+
+    /** 查询所有房源 */
+    getHouseList(){
       this.loading = true;
-      const params = {
-        offset: 0,
-        pagesize: 10
-      }
-      houseList(params).then(res =>{
-        this.pageList = res.data.pageList
+      listInfo(this.queryParams).then(res =>{
+        this.pageList = res.rows;
+        this.total = res.total;
         this.loading = false;
       })
     },
 
-    // 删除指定房源
-    handleDelete(index, row){
-      this.$confirm('确认删除?', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-      }).then(() => {
-        deleteHouse(row.id).then(res =>{
-          if (res.code === 200){
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
-            });
-          }
-        })
-      }).catch(()=>{
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-      })
-    },
-
-    // 打开房源编辑对话框
-    handleEdit(index, row){
-      this.editDialogVisible = true;
-      this.editFrom = {};
-      queryHouse(row.id).then(res =>{
-        this.editFrom = res.data
-      })
-    },
-
-    // 更新房源
-    handUpdate(option){
-      if (option === 'confirm'){
-        updateHouseInfo(this.editFrom).then(res =>{
-          if (res.code === 200){
-            this.editDialogVisible = false;
-            this.$message({
-              message: res.msg,
-              type: 'success'
-            });
-          }
-          else {
-            this.$message({
-              message: res.msg,
-              type: 'error'
-            });
-          }
-        }).catch(err =>{
-          console.log('API请求发生错误：', err);
-        })
-      }
-      else {
-        this.editDialogVisible = false;
-      }
-    },
-
-    // 打开新增房源交互框
-    openAddHouseDialog(){
-      this.addDialogVisible = true;
-      // 每次打开应当清空绑定值
-      this.addHouseFrom = {};
-    },
-    // 新增房源
-    handleAddHouse(option){
-      if (option === 'confirm'){
-        addHouseApi(this.addHouseFrom).then(res=>{
-          this.$message({
-            message: res.msg,
-            type: 'success'
-          });
-          if (res.code === 200){
-            this.addDialogVisible = false;
-          }
-        })
-      }
-      if (option === 'cancel'){
-        this.addDialogVisible = false;
-      }
-    },
-
-    // 查询当前所有房租
-    handelAllRoom(row){
-      console.log('allroom-row:', row)
-      this.apartment_name = row.apartment_name;
-      this.roomDialogVisible = true;
-      this.addRoomFrom.apartment_name = row.apartment_name;
-      this.addRoomFrom.apartment_id = row.id;
-      const params = {
-        apartment_id: row.id
-      }
-      queryAllRoom(params).then(res =>{
-        this.allRoomList = res.data;
-        console.log('allRoomList:', res.data)
-        this.roomEmptyVisible = res.data.length === 0;
-      })
-    },
 
     // 打开新增房间交互框
     openAddRoomVisible(){
@@ -411,15 +499,6 @@ export default {
       this.infoRoom = '';
       this.roomInfoDialogVisible = !this.roomInfoDialogVisible;
       loadRoomApi(id).then(res =>{
-        // if (res.data.state === 1) {
-        //   this.roomState = '空闲'
-        // }
-        // if (res.data.state === 0) {
-        //   this.roomState = '已租'
-        // }
-        // if (res.data.state === 2) {
-        //   this.roomState = '欠费'
-        // }
         this.infoRoom = res.data
       })
     },
@@ -480,25 +559,6 @@ export default {
 
 <style>
 
-  .container{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-  }
-
-  .pagination{
-    margin-top: 50px;
-  }
-
-  .function-top-btn{
-    margin-bottom: 20px;
-    width: 100%;
-  }
-
-  .demo-table-expand {
-    font-size: 0;
-  }
   .demo-table-expand label {
     width: 90px;
     color: #99a9bf;
@@ -526,6 +586,5 @@ export default {
   .room-item{
     margin: 15px;
   }
-
 
 </style>

@@ -18,8 +18,8 @@
         <result column="water" property="water" />
     </resultMap>
 
-    <sql id="Base_Column_List">
-        id,
+    <sql id="Column_List">
+         select id,
                 room_id,
                 floor,
                 apartment_id,
@@ -31,85 +31,49 @@
                 create_time,
                 power,
                 water
+         from apa_room_info
     </sql>
 
-    <insert id="insert" useGeneratedKeys="true" keyColumn="id" keyProperty="id" parameterType="com.yuelan.apartment.domain.ApaRoomInfo">
-        INSERT INTO apa_room_info
+    <insert id="insert" parameterType="com.yuelan.apartment.domain.ApaRoomInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into apa_room_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="null != room_id and '' != room_id">
-                room_id,
-            </if>
-            <if test="null != floor and '' != floor">
-                floor,
-            </if>
-            <if test="null != apartment_id and '' != apartment_id">
-                apartment_id,
-            </if>
-            <if test="null != tenants_id and '' != tenants_id">
-                tenants_id,
-            </if>
-            <if test="null != rent ">
-                rent,
-            </if>
-            <if test="null != state ">
-                state,
-            </if>
-            <if test="null != type and '' != type">
-                type,
-            </if>
-            <if test="null != area and '' != area">
-                area,
-            </if>
-            <if test="null != create_time ">
-                create_time,
-            </if>
-            <if test="null != power ">
-                power,
-            </if>
-            <if test="null != water ">
-                water
-            </if>
+            <if test="room_id != null and room_id != ''">room_id,</if>
+            <if test="floor != null">floor,</if>
+            <if test="apartment_id != null">apartment_id,</if>
+            <if test="tenants_id != null">tenants_id,</if>
+            <if test="rent != null">rent,</if>
+            <if test="state != null">state,</if>
+            <if test="type != null">type,</if>
+            <if test="area != null">area,</if>
+            <if test="create_time != null">create_time,</if>
+            <if test="power != null">power,</if>
+            <if test="water != null">water,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="null != room_id and '' != room_id">
-                #{room_id},
-            </if>
-            <if test="null != floor and '' != floor">
-                #{floor},
-            </if>
-            <if test="null != apartment_id and '' != apartment_id">
-                #{apartment_id},
-            </if>
-            <if test="null != tenants_id and '' != tenants_id">
-                #{tenants_id},
-            </if>
-            <if test="null != rent ">
-                #{rent},
-            </if>
-            <if test="null != state ">
-                #{state},
-            </if>
-            <if test="null != type and '' != type">
-                #{type},
-            </if>
-            <if test="null != area and '' != area">
-                #{area},
-            </if>
-            <if test="null != create_time ">
-                #{create_time},
-            </if>
-            <if test="null != power ">
-                #{power},
-            </if>
-            <if test="null != water ">
-                #{water}
-            </if>
+            <if test="room_id != null and room_id != ''">#{room_id},</if>
+            <if test="floor != null">#{floor},</if>
+            <if test="apartment_id != null">#{apartment_id},</if>
+            <if test="tenants_id != null">#{tenants_id},</if>
+            <if test="rent != null">#{rent},</if>
+            <if test="state != null">#{state},</if>
+            <if test="type != null">#{type},</if>
+            <if test="area != null">#{area},</if>
+            <if test="create_time != null">#{create_time},</if>
+            <if test="power != null">#{power},</if>
+            <if test="water != null">#{water},</if>
         </trim>
     </insert>
 
     <delete id="delete" >
         DELETE FROM apa_room_info
         WHERE id = #{id}
+    </delete>
+
+    <delete id="deleteRoomIds" parameterType="Long">
+        delete from apa_room_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
     </delete>
 
     <update id="update" parameterType="com.yuelan.apartment.domain.ApaRoomInfo">
@@ -130,34 +94,40 @@
         WHERE id = #{id}
     </update>
 
-
     <select id="load" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM apa_room_info
+        <include refid="Column_List" />
         WHERE id = #{id}
     </select>
 
-
-
     <select id="pageList" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM apa_room_info WHERE apartment_id = #{apartmentId}
+        <include refid="Column_List" />
+        WHERE apartment_id = #{apartmentId}
         LIMIT #{offset}, #{pagesize}
     </select>
 
-    <select id="pageListCount" resultType="java.lang.Integer">
-        SELECT count(1)
-        FROM apa_room_info
-    </select>
-
     <select id="roomList" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM apa_room_info WHERE apartment_id = #{apartmentId}
+        <include refid="Column_List" />
+        WHERE apartment_id = #{id}
     </select>
 
     <select id="queryRoomId" resultMap="BaseResultMap">
-        SELECT <include refid="Base_Column_List" />
-        FROM apa_room_info WHERE room_id = #{room_id}
+        <include refid="Column_List" />
+        WHERE room_id = #{room_id}
     </select>
 
+    <select id="selectApaRoomInfoList" parameterType="com.yuelan.apartment.domain.ApaRoomInfo" resultMap="BaseResultMap">
+        <include refid="Column_List"/>
+        <where>
+            <if test="room_id != null  and room_id != ''"> and room_id = #{room_id}</if>
+            <if test="floor != null "> and floor = #{floor}</if>
+            <if test="apartment_id != null "> and apartment_id = #{apartment_id}</if>
+            <if test="tenants_id != null  and tenants_id != ''"> and tenants_id = #{tenants_id}</if>
+            <if test="rent != null "> and rent = #{rent}</if>
+            <if test="state != null "> and state = #{state}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="power != null "> and power = #{power}</if>
+            <if test="water != null "> and water = #{water}</if>
+        </where>
+    </select>
 </mapper>

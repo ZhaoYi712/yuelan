@@ -39,8 +39,8 @@ public class TenantController extends BaseController {
     @PostMapping("/add")
     @RequiresPermissions("apartment:tenant:add")
     @Log(title = "租户信息录入", businessType = BusinessType.INSERT)
-    public AjaxResult addTenant(@RequestBody @Valid TenantRegisVo tenantRegisVo){
-        return toAjax(tenantInfoService.insert(tenantRegisVo));
+    public AjaxResult addTenant(@RequestBody @Valid TenantVo tenantVo){
+        return toAjax(tenantInfoService.insert(tenantVo));
     }
 
     /**
@@ -56,11 +56,23 @@ public class TenantController extends BaseController {
     }
 
     /**
+     * 清除房客
+     * @author ZhaoYi
+     * @date 2024/06/15
+     **/
+    @DeleteMapping("/{ids}")
+    @RequiresPermissions("apartment:tenant:remove")
+    @Log(title = "房客信息", businessType = BusinessType.DELETE)
+    public AjaxResult remove(@PathVariable Long[] ids) {
+        return toAjax(tenantInfoService.deleteTenantByIds(ids));
+    }
+
+    /**
      * 租户信息更新
      * @author ZhaoYi
      * @date 2024/05/23
      **/
-    @PostMapping("/update")
+    @PutMapping("/update")
     @RequiresPermissions("apartment:tenant:update")
     @Log(title = "租户信息更新", businessType = BusinessType.UPDATE)
     public AjaxResult updateTenant(@RequestBody @Valid TenantInfo tenantInfo){
@@ -89,21 +101,9 @@ public class TenantController extends BaseController {
     @RequiresPermissions("apartment:tenant:list")
     @Log(title = "查询所有租户-分页查询", businessType = BusinessType.QUERY)
     public TableDataInfo pageList(TenantInfo tenantInfo){
+        startPage();
         List<TenantVo> list = tenantInfoService.list(tenantInfo);
         return getDataTable(list);
-    }
-
-
-    /**
-     * 清除房客
-     * @author ZhaoYi
-     * @date 2024/06/15
-     **/
-    @DeleteMapping("/{ids}")
-    @RequiresPermissions("apartment:tenant:remove")
-    @Log(title = "房客信息", businessType = BusinessType.DELETE)
-    public AjaxResult remove(@PathVariable Long[] ids) {
-        return toAjax(tenantInfoService.deleteTenantByIds(ids));
     }
 
 }

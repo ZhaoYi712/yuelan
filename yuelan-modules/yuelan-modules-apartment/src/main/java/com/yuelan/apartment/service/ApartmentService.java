@@ -2,6 +2,7 @@ package com.yuelan.apartment.service;
 
 import com.yuelan.apartment.domain.ApartmentInfo;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -13,18 +14,29 @@ public interface ApartmentService {
 
     /**
      * 新增
+     *
+     * @return
      */
-    public void add(ApartmentInfo apartmentInfo);
+    public int add(ApartmentInfo apartmentInfo);
 
     /**
      * 删除
+     *
+     * @return
      */
-    public void delete(Integer id);
+    public int delete(Long id);
+
+    /**
+     * 批量删除
+     */
+    public int deleteIds(Long[] ids);
 
     /**
      * 更新
+     *
+     * @return
      */
-    public void update(ApartmentInfo apartmentInfo);
+    public int update(ApartmentInfo apartmentInfo);
 
     /**
      * 根据主键 id 查询
@@ -34,5 +46,5 @@ public interface ApartmentService {
     /**
      * 分页查询
      */
-    public Map<String,Object> pageList(int offset, int pagesize);
+    public List<ApartmentInfo> pageList(ApartmentInfo apartmentInfo);
 }

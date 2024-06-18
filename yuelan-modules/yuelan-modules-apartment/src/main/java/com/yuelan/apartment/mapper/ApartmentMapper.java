@@ -1,10 +1,14 @@
 package com.yuelan.apartment.mapper;
 
 import com.yuelan.apartment.domain.ApartmentInfo;
+import org.apache.ibatis.annotations.MapKey;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @description: 公寓信息Mapper
@@ -26,7 +30,15 @@ public interface ApartmentMapper{
      * @author BEJSON
      * @date 2024/05/18
      **/
-    int delete(Integer id);
+    int delete(Long id);
+
+    /**
+     * 批量删除公寓信息
+     *
+     * @param ids 需要删除的数据主键集合
+     * @return 结果
+     */
+    public int deleteIds(Long[] ids);
 
     /**
      * 更新
@@ -40,19 +52,14 @@ public interface ApartmentMapper{
      * @author BEJSON
      * @date 2024/05/18
      **/
-    ApartmentInfo load(Long id);
+    ApartmentInfo load(@Param("id") Long id);
 
     /**
      * 查询 分页查询
      * @author BEJSON
      * @date 2024/05/18
      **/
-    List<ApartmentInfo> pageList(@Param("username") String username, @Param("offset") int offset, @Param("pagesize") int pagesize);
+    List<ApartmentInfo> pageList(ApartmentInfo apartmentInfo);
 
-    /**
-     * 查询 分页查询 count
-     * @author BEJSON
-     * @date 2024/05/18
-     **/
-    int pageListCount(@Param("offset") int offset, @Param("pagesize") int pagesize);
+
 }

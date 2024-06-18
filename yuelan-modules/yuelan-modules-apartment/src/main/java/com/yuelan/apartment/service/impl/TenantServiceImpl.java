@@ -9,6 +9,7 @@ import com.yuelan.apartment.mapper.RoomMapper;
 import com.yuelan.apartment.mapper.TenantMapper;
 import com.yuelan.apartment.service.ApaRoomService;
 import com.yuelan.apartment.service.TenantService;
+import com.yuelan.common.core.context.SecurityContextHolder;
 import com.yuelan.common.core.exception.ServiceException;
 import com.yuelan.common.core.utils.DateUtils;
 import com.yuelan.common.core.utils.bean.BeanUtils;
@@ -19,12 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import static com.yuelan.common.core.utils.PageUtils.startPage;
 
 /**
- * @description:
+ * @description: 租户管理
  * @Author: ZhaoYi
  * @date: 24-5-23 17:00
  */
@@ -34,38 +36,38 @@ public class TenantServiceImpl implements TenantService {
     @Resource
     private TenantMapper tenantInfoMapper;
 
-    @Resource
-    private ApaRoomService apaRoomService;
-
-    @Resource
+    @Autowired
     private RoomMapper roomMapper;
 
     @Autowired
     private ApartmentMapper apartmentMapper;
 
-
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-
 
 
     @Transactional
     @Override
-    public int insert(TenantRegisVo tenantRegisVo) {
-
-        // 房租创建时间
-        tenantRegisVo.getApaRoomInfo().setCreate_time(DateUtils.getNowDate());
-
+    public int insert(TenantVo tenantVo) {
         // 查询房间是否已被出租
-        ApaRoomInfo apaRoomInfo = roomMapper.queryRoomId(tenantRegisVo.getApaRoomInfo().getRoom_id());
+        ApaRoomInfo apaRoomInfo = roomMapper.queryRoomId(tenantVo.getRoom_id());
         if (apaRoomInfo != null) {
-           throw new ServiceException(apaRoomInfo.getRoom_id()+ "该房间已被出租");
+            throw new ServiceException(apaRoomInfo.getRoom_id()+ "该房间已被出租");
+        }
+        // 新增房间
+        ApaRoomInfo room = new ApaRoomInfo();
+        room.setRoom_id(tenantVo.getRoom_id());
+        room.setFloor(Integer.parseInt(tenantVo.getRoom_id().substring(0, 2)));
+        room.setApartment_id(tenantVo.getApartment_id());
+        room.setState(1);
+        room.setCreate_time(DateUtils.getNowDate());
+        int insert = roomMapper.insert(room);
+        if (insert < 0) {
+            throw new ServiceException("新增操作异常");
         }
         // 新增租户
-        tenantInfoMapper.insert(tenantRegisVo.getTenantInfo());
-        // 新增房间
-        apaRoomService.addRoom(tenantRegisVo.getApaRoomInfo());
-        return 0;
+        return tenantInfoMapper.insert(tenantVo);
     }
+
 
     @Transactional
     @Override
@@ -73,10 +75,12 @@ public class TenantServiceImpl implements TenantService {
         return tenantInfoMapper.delete(id);
     }
 
+
     @Override
     public int deleteTenantByIds(Long[] ids) {
         return tenantInfoMapper.deleteTenantByIds(ids);
     }
+
 
     @Transactional
     @Override
@@ -84,14 +88,16 @@ public class TenantServiceImpl implements TenantService {
         return tenantInfoMapper.update(tenantInfo);
     }
 
+
     @Override
     public TenantInfo load(Long id) {
         return tenantInfoMapper.load(id);
     }
 
+
     @Override
     public List<TenantVo> list(TenantInfo tenantInfo) {
-        startPage();
+        String userName = SecurityContextHolder.getUserName();
         List<TenantInfo> pageList = tenantInfoMapper.tenantInfoList(tenantInfo);
 
         List<TenantVo> tenantVoList = new ArrayList<>();
@@ -105,4 +111,6 @@ public class TenantServiceImpl implements TenantService {
         }
         return tenantVoList;
     }
+
+
 }

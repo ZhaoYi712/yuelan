@@ -31,33 +31,44 @@ public class ApaRoomServiceImpl implements ApaRoomService {
 
     @Transactional
     @Override
-    public void addRoom(ApaRoomInfo apaRoomInfo) {
+    public int addRoom(ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
             throw new ServiceException("from cannot be blank or null");
         }
         ApaRoomInfo load = roomMapper.queryRoomId(apaRoomInfo.getRoom_id());
-        if (load != null) {
-            throw new ServiceException(load.getRoom_id()+ "房间已存在");
+        if (load.getState() == 0) {
+            throw new ServiceException(load.getRoom_id()+ "房间已出租");
         }
         apaRoomInfo.setCreate_time(DateUtils.getNowDate());
-        roomMapper.insert(apaRoomInfo);
+        return roomMapper.insert(apaRoomInfo);
     }
 
     @Transactional
     @Override
-    public void delete(Integer id) {
+    public int delete(Long id) {
         if (id == null){
             throw new ServiceException("id cannot be blank or null");
         }
-        roomMapper.delete(id);
+        return roomMapper.delete(id);
+    }
+
+    /**
+     * 批量删除房租信息
+     *
+     * @param ids 需要删除的房租信息主键
+     * @return 结果
+     */
+    @Override
+    public int deleteRoomIds(Long[] ids) {
+        return roomMapper.deleteRoomIds(ids);
     }
 
     @Override
-    public void update(ApaRoomInfo apaRoomInfo) {
+    public int update(ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
             throw new ServiceException("apaRoomInfo cannot be blank or null");
         }
-        roomMapper.update(apaRoomInfo);
+        return roomMapper.update(apaRoomInfo);
     }
 
     @Override
@@ -68,23 +79,23 @@ public class ApaRoomServiceImpl implements ApaRoomService {
         return roomMapper.load(id);
     }
 
+//    @Override
+//    public Map<String,Object> pageList(int offset, int pagesize, Integer apartmentId) {
+//
+//        List<ApaRoomInfo> pageList = roomMapper.pageList(offset, pagesize, apartmentId);
+//        int totalCount = roomMapper.pageListCount(offset, pagesize);
+//
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("pageList", pageList);
+//        result.put("totalCount", totalCount);
+//
+//        return result;
+//    }
+
     @Override
-    public Map<String,Object> pageList(int offset, int pagesize, Integer apartmentId) {
+    public List<FloorVo> roomList(Long id) {
 
-        List<ApaRoomInfo> pageList = roomMapper.pageList(offset, pagesize, apartmentId);
-        int totalCount = roomMapper.pageListCount(offset, pagesize);
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("pageList", pageList);
-        result.put("totalCount", totalCount);
-
-        return result;
-    }
-
-    @Override
-    public List<FloorVo> roomList(Integer apartmentId) {
-
-        List<ApaRoomInfo> apaRoomInfoList = roomMapper.roomList(apartmentId);
+        List<ApaRoomInfo> apaRoomInfoList = roomMapper.roomList(id);
 
         // 使用Map来按楼层值分组房间
         Map<Integer, List<ApaRoomInfo>> roomsByFloor =
@@ -110,5 +121,12 @@ public class ApaRoomServiceImpl implements ApaRoomService {
             floorVoList.add(floorVo);
         }
         return floorVoList;
+    }
+
+
+    @Override
+    public List<ApaRoomInfo> selectApaRoomInfoList(ApaRoomInfo apaRoomInfo)
+    {
+        return roomMapper.selectApaRoomInfoList(apaRoomInfo);
     }
 }
