@@ -45,7 +45,7 @@ public class ApaRoomServiceImpl implements ApaRoomService {
 
     @Transactional
     @Override
-    public int delete(Long id) {
+    public int deleteRoom(Long id) {
         if (id == null){
             throw new ServiceException("id cannot be blank or null");
         }

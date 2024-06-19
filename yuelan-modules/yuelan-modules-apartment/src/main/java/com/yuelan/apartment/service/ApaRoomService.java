@@ -25,7 +25,7 @@ public interface ApaRoomService {
      *
      * @return
      */
-    public int delete(Long id);
+    public int deleteRoom(Long id);
 
     /**
      * 批量删除房租信息
