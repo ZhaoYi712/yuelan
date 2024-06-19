@@ -20,14 +20,12 @@ public interface ApartmentMapper{
 
     /**
      * 新增
-     * @author BEJSON
      * @date 2024/05/18
      **/
     int insert(ApartmentInfo apartmentInfo);
 
     /**
      * 刪除
-     * @author BEJSON
      * @date 2024/05/18
      **/
     int delete(Long id);
@@ -38,28 +36,30 @@ public interface ApartmentMapper{
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteIds(Long[] ids);
+    int deleteIds(Long[] ids);
 
     /**
      * 更新
-     * @author BEJSON
      * @date 2024/05/18
      **/
     int update(ApartmentInfo apartmentInfo);
 
     /**
      * 查询 根据主键 id 查询
-     * @author BEJSON
      * @date 2024/05/18
      **/
     ApartmentInfo load(@Param("id") Long id);
 
     /**
      * 查询 分页查询
-     * @author BEJSON
      * @date 2024/05/18
      **/
     List<ApartmentInfo> pageList(ApartmentInfo apartmentInfo);
 
+    /**
+     * 查询 根据房源昵称查询
+     * @date 2024/06/19
+     */
+    ApartmentInfo queryByNickName(@Param("ownerId")Long ownerId, @Param("apartmentName")String apartmentName);
 
 }

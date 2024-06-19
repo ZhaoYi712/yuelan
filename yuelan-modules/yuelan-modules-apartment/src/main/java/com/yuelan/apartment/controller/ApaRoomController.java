@@ -32,7 +32,6 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping(value = "/room")
-@Validated
 public class ApaRoomController extends BaseController {
 
     @Autowired

@@ -116,5 +116,10 @@
         </where>
     </select>
 
+    <select id="queryByNickName" resultType="com.yuelan.apartment.domain.ApartmentInfo">
+        <include refid="Column_List" />
+        where owner = #{ownerId} and apartment_name = #{apartmentName}
+    </select>
+
 
 </mapper>

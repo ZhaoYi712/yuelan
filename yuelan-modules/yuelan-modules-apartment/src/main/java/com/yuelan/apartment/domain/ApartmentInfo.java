@@ -1,7 +1,6 @@
 package com.yuelan.apartment.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -28,7 +27,7 @@ public class ApartmentInfo implements Serializable {
     /**
      * 公寓负责人
      */
-    private String owner;
+    private Long owner;
 
     /**
      * 公寓地址
@@ -71,11 +70,11 @@ public class ApartmentInfo implements Serializable {
         this.apartment_name = apartment_name;
     }
 
-    public String getOwner() {
+    public Long getOwner() {
         return owner;
     }
 
-    public void setOwner(String owner) {
+    public void setOwner(Long owner) {
         this.owner = owner;
     }
 

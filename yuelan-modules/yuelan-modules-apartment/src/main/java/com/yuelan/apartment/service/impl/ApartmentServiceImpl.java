@@ -32,7 +32,12 @@ public class ApartmentServiceImpl implements ApartmentService {
         if (apartmentInfo == null) {
             throw new ServiceException("参数异常");
         }
-        apartmentInfo.setOwner(SecurityContextHolder.getUserName());
+        Long userId = SecurityContextHolder.getUserId();
+        ApartmentInfo house = apartmentMapper.queryByNickName(userId, apartmentInfo.getApartment_name());
+        if (house != null) {
+            throw new ServiceException("该房源昵称已存在");
+        }
+        apartmentInfo.setOwner(userId);
         apartmentInfo.setState("正常");
         apartmentInfo.setCreate_time(DateUtils.getNowDate());
         return apartmentMapper.insert(apartmentInfo);
@@ -55,6 +60,9 @@ public class ApartmentServiceImpl implements ApartmentService {
      */
     @Override
     public int deleteIds(Long[] ids) {
+        if (ids == null) {
+            throw new ServiceException("ids cannot is null");
+        }
         return apartmentMapper.deleteIds(ids);
     }
 
@@ -80,8 +88,8 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public List<ApartmentInfo> pageList(ApartmentInfo apartmentInfo) {
         // 当前用户线程
-        apartmentInfo.setOwner(SecurityContextHolder.getUserName());
-        // 根据用户名查询房源
+        apartmentInfo.setOwner(SecurityContextHolder.getUserId());
+        // 根据用户id查询房源
         return apartmentMapper.pageList(apartmentInfo);
     }
 

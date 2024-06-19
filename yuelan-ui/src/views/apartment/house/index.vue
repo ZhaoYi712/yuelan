@@ -92,10 +92,10 @@
     <!--表格数据-->
     <el-table v-loading="loading" :data="pageList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="公寓编号" align="center" prop="id" />
-      <el-table-column label="公寓名称" align="center" prop="apartment_name" />
-      <el-table-column label="公寓地址" align="center" prop="address" />
-      <el-table-column label="公寓状态" align="center" prop="state" />
+      <el-table-column label="房源编号" align="center" prop="id" />
+      <el-table-column label="房源名称" align="center" prop="apartment_name" />
+      <el-table-column label="房源地址" align="center" prop="address" />
+      <el-table-column label="房源状态" align="center" prop="state" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -139,100 +139,12 @@
       </div>
     </el-dialog>
 
+    <!-- 弹出房间交互框 -->
     <el-dialog
       :title="title"
       :visible.sync="roomCompView"
       width="30%">
       <room v-if="roomCompView" :rows="roomDate"></room>
-    </el-dialog>
-
-    <!--查看当前房源所有房间-->
-    <el-dialog :title="apartment_name" :visible.sync="roomDialogVisible">
-      <el-button type="primary" plain @click="openAddRoomVisible()">新增房间</el-button>
-
-      <div class="room-box" v-for="(roomItem, index) in allRoomList" :key="index">
-        <div class="floor">{{roomItem.floor}} 楼</div>
-        <div class="room-list" >
-          <el-button class="room-item" :type="room.state === 0 ? 'success':'info' " plain @click="roomInfo(room.id)" v-for="room in roomItem.roomVo" :key="room.id">
-            {{room.room_id}}
-          </el-button>
-        </div>
-      </div>
-
-      <el-empty v-if="roomEmptyVisible" description="暂无房租，请先添加"></el-empty>
-    </el-dialog>
-
-    <!--添加房间-->
-    <el-dialog title="添加房间" :visible.sync="roomAddDialogVisible" >
-      <el-form :model="addRoomFrom">
-        <el-form-item label="房间号" :required="true" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addRoomFrom.room_id" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="楼层" :required="true" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addRoomFrom.floor" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="所属" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addRoomFrom.apartment_name" :disabled="true" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="租户" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addRoomFrom.tenants_id" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="租金" :required="true" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addRoomFrom.rent" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="房间状态" :required="true" :label-width="formLabelWidth" style="width: 300px">
-          <el-select v-model="roomState" placeholder="房间状态">
-            <el-option label="已租" value="0"></el-option>
-            <el-option label="空闲" value="1"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="房间类型" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addRoomFrom.type" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="房间面积" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addRoomFrom.area" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="当前用电量" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addRoomFrom.power" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="当前用水量" :clearable="true" :label-width="formLabelWidth" style="width: 300px">
-          <el-input v-model="addRoomFrom.water" :clearable="true" autocomplete="off"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="handleAddRoom('cancel')">取 消</el-button>
-        <el-button type="primary" @click="handleAddRoom('confirm')">确 定</el-button>
-      </div>
-    </el-dialog>
-
-    <!--房租详细信息交互框-->
-    <el-dialog
-      title="房间详细信息"
-      class="room-info"
-      :visible.sync="roomInfoDialogVisible"
-      width="30%">
-        <el-form label-width="100px">
-          <el-form-item label="房间号">
-            <el-input v-model="infoRoom.room_id" style="width: 200px"></el-input>
-          </el-form-item>
-          <el-form-item label="租户">
-            <el-input v-model="infoRoom.tenants_id === null ? '暂无': infoRoom.tenants_id " style="width: 200px"></el-input>
-          </el-form-item>
-          <el-form-item label="租金">
-            <el-input v-model="infoRoom.rent" style="width: 200px"></el-input>
-          </el-form-item>
-          <el-form-item label="类型">
-            <el-input v-model="infoRoom.type" style="width: 200px"></el-input>
-          </el-form-item>
-          <el-form-item label="用水量">
-            <el-input v-model="infoRoom.water" style="width: 200px"></el-input>
-          </el-form-item>
-          <el-form-item label="用电量">
-            <el-input v-model="infoRoom.power" style="width: 200px"></el-input>
-          </el-form-item>
-        </el-form>
-      <el-button type="danger" @click="delRoom(infoRoom.id)">删 除</el-button>
-      <el-button type="primary" @click="updateRoom(infoRoom)">更 新</el-button>
     </el-dialog>
 
     <!--分页器-->
@@ -280,8 +192,6 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 空数据组件
-      roomEmptyVisible: true,
       // 表单label宽度
       formLabelWidth: '100px',
       // 房源编辑models
@@ -306,16 +216,6 @@ export default {
       roomState: '',
       // 房源昵称
       apartment_name: '',
-      // 房间数据
-      allRoomList: [],
-      // 添加房间弹出框
-      roomAddDialogVisible: false,
-      // 所有房间弹出框
-      roomDialogVisible: false,
-      // 房间信息弹出框
-      roomInfoDialogVisible: false,
-      // 当前房间信息models
-      infoRoom: '',
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -465,94 +365,6 @@ export default {
       })
     },
 
-
-    // 打开新增房间交互框
-    openAddRoomVisible(){
-      this.roomAddDialogVisible = true;
-    },
-    // 新增房租
-    handleAddRoom(option){
-      if (option === 'confirm'){
-        this.addRoomFrom.state = this.roomState;
-        addRoomApi(this.addRoomFrom).then(res =>{
-          if (res.code === 200){
-            this.$message({
-              message: res.msg,
-              type: 'success'
-            });
-          }
-          else {
-            this.$message({
-              message: res.msg,
-              type: 'error'
-            });
-          }
-        })
-      }
-      if (option === 'cancel'){
-        this.roomAddDialogVisible = false;
-      }
-    },
-
-    // 打开当前房租信息框
-    roomInfo(id){
-      this.infoRoom = '';
-      this.roomInfoDialogVisible = !this.roomInfoDialogVisible;
-      loadRoomApi(id).then(res =>{
-        this.infoRoom = res.data
-      })
-    },
-
-    // 删除房租
-    delRoom(id){
-      this.$confirm('确认删除?', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-      }).then(() =>{
-        delRoomApi(id).then(res =>{
-          if (res.code === 200){
-            this.$message({
-              type: 'success',
-              message: res.msg
-            });
-            this.roomInfoDialogVisible = false;
-          }
-          else {
-            this.$message({
-              type: 'error',
-              message: res.msg
-            });
-          }
-        })
-      }).catch(()=>{
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-      })
-    },
-
-    // 更新房租
-    updateRoom(from){
-      console.log(from)
-      updateRoomApi(from).then(res =>{
-        if (res.code === 200){
-          this.$message({
-            message: res.msg,
-            type: 'success'
-          });
-        }
-        else {
-          this.$message({
-            message: res.msg,
-            type: 'error'
-          });
-        }
-      }).catch(err =>{
-        console.log('API请求发生错误：', err);
-      })
-    },
-
   }
 }
 </script>
@@ -567,24 +379,6 @@ export default {
     margin-right: 0;
     margin-bottom: 0;
     width: 50%;
-  }
-
-  .room-box{
-    display: flex;
-    flex-direction: column;
-  }
-  .floor{
-    text-align: center;
-    font-size: 15px;
-  }
-  .room-list{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-
-  }
-  .room-item{
-    margin: 15px;
   }
 
 </style>
