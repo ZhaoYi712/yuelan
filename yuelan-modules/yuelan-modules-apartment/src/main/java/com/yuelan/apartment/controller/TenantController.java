@@ -1,7 +1,6 @@
 package com.yuelan.apartment.controller;
 
 import com.yuelan.apartment.domain.TenantInfo;
-import com.yuelan.apartment.domain.vo.TenantRegisVo;
 import com.yuelan.apartment.domain.vo.TenantVo;
 import com.yuelan.apartment.service.TenantService;
 import com.yuelan.common.core.web.controller.BaseController;
@@ -87,8 +86,9 @@ public class TenantController extends BaseController {
     @GetMapping("/load")
     @RequiresPermissions("apartment:tenant:load")
     @Log(title = "租户信息查看", businessType = BusinessType.QUERY)
-    public AjaxResult load(@NotNull Long id){
-        return success(tenantInfoService.load(id));
+    public AjaxResult load(Long id) {
+        TenantInfo load = tenantInfoService.load(id);
+        return success(load);
     }
 
 

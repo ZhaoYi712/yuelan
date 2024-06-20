@@ -1,11 +1,14 @@
 package com.yuelan.apartment.service.impl;
 
+import com.yuelan.apartment.common.Constant;
 import com.yuelan.apartment.domain.ApartmentInfo;
 import com.yuelan.apartment.mapper.ApartmentMapper;
+import com.yuelan.apartment.mapper.RoomMapper;
 import com.yuelan.apartment.service.ApartmentService;
 import com.yuelan.common.core.context.SecurityContextHolder;
 import com.yuelan.common.core.exception.ServiceException;
 import com.yuelan.common.core.utils.DateUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -23,15 +26,14 @@ import static com.yuelan.common.core.utils.PageUtils.startPage;
 @Service
 public class ApartmentServiceImpl implements ApartmentService {
 
-    @Resource
+    @Autowired
     private ApartmentMapper apartmentMapper;
 
+    @Autowired
+    private RoomMapper roomMapper;
 
     @Override
     public int add(ApartmentInfo apartmentInfo){
-        if (apartmentInfo == null) {
-            throw new ServiceException("参数异常");
-        }
         Long userId = SecurityContextHolder.getUserId();
         ApartmentInfo house = apartmentMapper.queryByNickName(userId, apartmentInfo.getApartment_name());
         if (house != null) {
@@ -47,7 +49,12 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public int delete(Long id) {
         if (id == null) {
-            throw new ServiceException("id cannot is null");
+            throw new ServiceException(Constant.SERVICE_ERROR);
+        }
+        // 清除房源时应清除其它相关业务
+        int res = roomMapper.removeRoomByApartment(id);
+        if (res < 1) {
+            throw new ServiceException("业务异常");
         }
         return apartmentMapper.delete(id);
     }
@@ -61,7 +68,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public int deleteIds(Long[] ids) {
         if (ids == null) {
-            throw new ServiceException("ids cannot is null");
+            throw new ServiceException(Constant.SERVICE_ERROR);
         }
         return apartmentMapper.deleteIds(ids);
     }
@@ -79,7 +86,7 @@ public class ApartmentServiceImpl implements ApartmentService {
     @Override
     public ApartmentInfo load(Long id) {
         if (id == null) {
-            throw new ServiceException("id cannot is null");
+            throw new ServiceException(Constant.SERVICE_ERROR);
         }
         return apartmentMapper.load(id);
     }

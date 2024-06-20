@@ -83,4 +83,12 @@ public interface RoomMapper {
      */
     List<ApaRoomInfo> selectApaRoomInfoList(ApaRoomInfo apaRoomInfo);
 
+
+    /**
+     * 根据公寓id清除相关房间
+     * @param apartmentId
+     * @return
+     */
+    int removeRoomByApartment(Long apartmentId);
+
 }

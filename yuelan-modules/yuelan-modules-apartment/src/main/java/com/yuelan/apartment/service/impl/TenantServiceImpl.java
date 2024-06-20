@@ -1,6 +1,8 @@
 package com.yuelan.apartment.service.impl;
 
+import com.yuelan.apartment.common.Constant;
 import com.yuelan.apartment.domain.ApaRoomInfo;
+import com.yuelan.apartment.domain.ApartmentInfo;
 import com.yuelan.apartment.domain.TenantInfo;
 import com.yuelan.apartment.domain.vo.TenantRegisVo;
 import com.yuelan.apartment.domain.vo.TenantVo;
@@ -72,12 +74,18 @@ public class TenantServiceImpl implements TenantService {
     @Transactional
     @Override
     public int delete(Long id) {
+        if (id == null) {
+            throw new ServiceException(Constant.SERVICE_ERROR);
+        }
         return tenantInfoMapper.delete(id);
     }
 
 
     @Override
     public int deleteTenantByIds(Long[] ids) {
+        if (ids == null) {
+            throw new ServiceException(Constant.SERVICE_ERROR);
+        }
         return tenantInfoMapper.deleteTenantByIds(ids);
     }
 
@@ -91,13 +99,17 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public TenantInfo load(Long id) {
+        if (id == null) {
+            throw new ServiceException(Constant.SERVICE_ERROR);
+        }
         return tenantInfoMapper.load(id);
     }
 
 
     @Override
     public List<TenantVo> list(TenantInfo tenantInfo) {
-        String userName = SecurityContextHolder.getUserName();
+        Long userId = SecurityContextHolder.getUserId();
+        ApartmentInfo apartment = apartmentMapper.load(userId);
         List<TenantInfo> pageList = tenantInfoMapper.tenantInfoList(tenantInfo);
 
         List<TenantVo> tenantVoList = new ArrayList<>();

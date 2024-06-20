@@ -1,5 +1,6 @@
 package com.yuelan.apartment.service.impl;
 
+import com.yuelan.apartment.common.Constant;
 import com.yuelan.apartment.domain.ApaRoomInfo;
 import com.yuelan.apartment.domain.vo.FloorVo;
 import com.yuelan.apartment.mapper.RoomMapper;
@@ -33,7 +34,7 @@ public class ApaRoomServiceImpl implements ApaRoomService {
     @Override
     public int addRoom(ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
-            throw new ServiceException("from cannot be blank or null");
+            throw new ServiceException(Constant.SERVICE_ERROR);
         }
         ApaRoomInfo load = roomMapper.queryRoomId(apaRoomInfo.getRoom_id());
         if (load.getState() == 0) {
@@ -46,8 +47,8 @@ public class ApaRoomServiceImpl implements ApaRoomService {
     @Transactional
     @Override
     public int deleteRoom(Long id) {
-        if (id == null){
-            throw new ServiceException("id cannot be blank or null");
+        if (id == null) {
+            throw new ServiceException(Constant.SERVICE_ERROR);
         }
         return roomMapper.delete(id);
     }
@@ -60,13 +61,16 @@ public class ApaRoomServiceImpl implements ApaRoomService {
      */
     @Override
     public int deleteRoomIds(Long[] ids) {
+        if (ids == null) {
+            throw new ServiceException(Constant.SERVICE_ERROR);
+        }
         return roomMapper.deleteRoomIds(ids);
     }
 
     @Override
     public int update(ApaRoomInfo apaRoomInfo) {
         if (apaRoomInfo == null) {
-            throw new ServiceException("apaRoomInfo cannot be blank or null");
+            throw new ServiceException(Constant.SERVICE_ERROR);
         }
         return roomMapper.update(apaRoomInfo);
     }
@@ -74,26 +78,17 @@ public class ApaRoomServiceImpl implements ApaRoomService {
     @Override
     public ApaRoomInfo load(Long id){
         if (id == null) {
-            throw new ServiceException("id cannot be blank or null");
+            throw new ServiceException(Constant.SERVICE_ERROR);
         }
         return roomMapper.load(id);
     }
 
-//    @Override
-//    public Map<String,Object> pageList(int offset, int pagesize, Integer apartmentId) {
-//
-//        List<ApaRoomInfo> pageList = roomMapper.pageList(offset, pagesize, apartmentId);
-//        int totalCount = roomMapper.pageListCount(offset, pagesize);
-//
-//        Map<String, Object> result = new HashMap<>();
-//        result.put("pageList", pageList);
-//        result.put("totalCount", totalCount);
-//
-//        return result;
-//    }
 
     @Override
     public List<FloorVo> roomList(Long id) {
+        if (id == null) {
+            throw new ServiceException(Constant.SERVICE_ERROR);
+        }
 
         List<ApaRoomInfo> apaRoomInfoList = roomMapper.roomList(id);
 
@@ -125,8 +120,7 @@ public class ApaRoomServiceImpl implements ApaRoomService {
 
 
     @Override
-    public List<ApaRoomInfo> selectApaRoomInfoList(ApaRoomInfo apaRoomInfo)
-    {
+    public List<ApaRoomInfo> selectApaRoomInfoList(ApaRoomInfo apaRoomInfo) {
         return roomMapper.selectApaRoomInfoList(apaRoomInfo);
     }
 }

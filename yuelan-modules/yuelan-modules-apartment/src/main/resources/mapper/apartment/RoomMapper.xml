@@ -76,6 +76,11 @@
         </foreach>
     </delete>
 
+    <delete id="removeRoomByApartment">
+        delete from apa_room_info
+        where apartment_id = #{apartmentId}
+    </delete>
+
     <update id="update" parameterType="com.yuelan.apartment.domain.ApaRoomInfo">
         UPDATE apa_room_info
         <set>

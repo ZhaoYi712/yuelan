@@ -40,7 +40,7 @@ public class ApartmentController extends BaseController {
     @PostMapping
     @RequiresPermissions("apartment:house:add")
     @Log(title = "房源添加", businessType = BusinessType.INSERT)
-    public AjaxResult addApartment(@RequestBody @Validated ApartmentInfo apartmentInfo){
+    public AjaxResult addApartment(@Validated @RequestBody ApartmentInfo apartmentInfo){
         return toAjax(apartmentService.add(apartmentInfo));
     }
 
@@ -52,7 +52,7 @@ public class ApartmentController extends BaseController {
     @DeleteMapping("/{ids}")
     @RequiresPermissions("apartment:house:delete")
     @Log(title = "房源删除", businessType = BusinessType.DELETE)
-    public AjaxResult remove(@PathVariable @NotNull Long[] ids){
+    public AjaxResult remove(@PathVariable Long[] ids){
         return toAjax(apartmentService.deleteIds(ids));
     }
 
@@ -76,7 +76,7 @@ public class ApartmentController extends BaseController {
     @GetMapping(value = "/{id}")
     @RequiresPermissions("apartment:house:query")
     @Log(title = "房源信息查询", businessType = BusinessType.QUERY)
-    public AjaxResult getInfo(@NotNull @PathVariable("id") Long id) {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(apartmentService.load(id));
     }
 
@@ -88,7 +88,7 @@ public class ApartmentController extends BaseController {
     @GetMapping("/list")
     @RequiresPermissions("apartment:house:list")
     @Log(title = "房源信息查询-分页查询", businessType = BusinessType.QUERY)
-    public TableDataInfo list(ApartmentInfo apartment) {
+    public TableDataInfo list(@Validated ApartmentInfo apartment) {
         startPage();
         List<ApartmentInfo> list = apartmentService.pageList(apartment);
         return getDataTable(list);
